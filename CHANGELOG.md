@@ -8,7 +8,7 @@
 - Bold/faint mutual exclusion handling in composition
 - TIntMe[] shortcut method for convenient style creation
 - Style#call and Style#[] methods for applying styles to text
-- Paint gem integration for ANSI escape code generation
+- Native ANSI SGR implementation with comprehensive color and effect support
 - Zeitwerk autoloader with custom inflection rules for TIntMe
 - Comprehensive test suite with 100% code coverage
 - SimpleCov integration for coverage reporting

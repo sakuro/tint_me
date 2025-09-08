@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TIntMe do
+  # ANSI escape sequence for readability in test expectations
+  let(:esc) { "\e" }
+
   describe ".[]" do
     it "creates a Style instance with given options" do
       style = TIntMe[foreground: :blue]
@@ -23,14 +26,14 @@ RSpec.describe TIntMe do
 
     it "applies styling to text" do
       blue_style = TIntMe[foreground: :blue]
-      expect(blue_style.call("test")).to eq(Paint["test", :blue])
+      expect(blue_style.call("test")).to eq("#{esc}[34mtest#{esc}[0m")
     end
 
     it "supports style composition" do
       base = TIntMe[foreground: :red]
       emphasis = TIntMe[bold: true]
       combined = base >> emphasis
-      expect(combined.call("test")).to eq(Paint["test", :red, :bold])
+      expect(combined.call("test")).to eq("#{esc}[31;1mtest#{esc}[0m")
     end
   end
 end

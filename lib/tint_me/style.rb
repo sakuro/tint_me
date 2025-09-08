@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "paint"
-
 module TIntMe
   Style = Data.define(
     :foreground,
@@ -44,6 +42,12 @@ module TIntMe
   #     # ... other boolean effects: overline, blink, conceal
   #   )
   class Style
+    # Returns the singleton instance of SGRBuilder
+    # @return [SGRBuilder] The SGR builder instance
+    # @api private
+    def self.sgr_builder
+      SGRBuilder.instance
+    end
     # @!attribute [r] foreground
     #   @return [Symbol, String] The foreground color (:red, :blue, :default, :reset, hex "#FF0000", etc.)
 
@@ -142,12 +146,41 @@ module TIntMe
     #   style.call("Hello")  # => "\e[31;1mHello\e[0m"
     #   style["World"]       # => "\e[31;1mWorld\e[0m" (alias)
     def call(text)
-      styles = build_styles
-      if styles.empty?
-        text
-      else
-        Paint[text, *styles]
-      end
+      sgr_builder = self.class.sgr_builder
+
+      # Prepare foreground color
+      foreground_color = foreground if foreground && foreground != :default
+
+      # Prepare background color
+      background_color = background if background && background != :default
+
+      # Handle underline effect
+      underline_effect = case underline
+                         when true
+                           true
+                         when :double
+                           :double
+                         when nil, false
+                           nil
+                         else
+                           raise ArgumentError, "Invalid underline value: #{underline.inspect}"
+                         end
+
+      prefix = sgr_builder.prefix_codes(
+        foreground: foreground_color,
+        background: background_color,
+        bold: bold == true ? true : nil,
+        faint: faint == true ? true : nil,
+        italic: italic == true ? true : nil,
+        underline: underline_effect,
+        blink: blink == true ? true : nil,
+        inverse: inverse == true ? true : nil,
+        conceal: conceal == true ? true : nil,
+        overline: overline == true ? true : nil
+      )
+      return text if prefix.empty?
+
+      "#{prefix}#{text}#{sgr_builder.reset_code}"
     end
 
     alias [] call
@@ -247,43 +280,6 @@ module TIntMe
       else
         other
       end
-    end
-
-    private def build_styles
-      styles = []
-
-      # Add colors individually
-      if foreground && foreground != :default && background && background != :default
-        styles << foreground
-        styles << background
-      elsif foreground && foreground != :default
-        styles << foreground
-      elsif background && background != :default
-        styles << nil
-        styles << background
-      end
-
-      # Add text decorations
-      case underline
-      when true
-        styles << :underline
-      when :double
-        styles << :double_underline
-      when nil, false
-        # No underline
-      else
-        raise ArgumentError, "Invalid underline value: #{underline.inspect}"
-      end
-
-      styles << :overline if overline == true
-      styles << :bold if bold == true
-      styles << :faint if faint == true
-      styles << :blink if blink == true
-      styles << :italic if italic == true
-      styles << :inverse if inverse == true
-      styles << :conceal if conceal == true
-
-      styles
     end
   end
 end

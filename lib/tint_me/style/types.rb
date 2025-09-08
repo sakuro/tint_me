@@ -8,9 +8,28 @@ module TIntMe
     module Types
       include Dry.Types()
 
-      # Standard ANSI color names
+      # Standard ANSI color names + bright colors
       ColorSymbol = Symbol.enum(
-        :default, :reset, :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :gray
+        :default,
+        :reset,
+        :black,
+        :red,
+        :green,
+        :yellow,
+        :blue,
+        :magenta,
+        :cyan,
+        :white,
+        :gray,
+        # Bright colors (90-97)
+        :bright_black,
+        :bright_red,
+        :bright_green,
+        :bright_yellow,
+        :bright_blue,
+        :bright_magenta,
+        :bright_cyan,
+        :bright_white
       )
       public_constant :ColorSymbol
 

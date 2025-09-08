@@ -37,7 +37,8 @@ module TIntMe
   # Setup Zeitwerk loader
   loader = Zeitwerk::Loader.for_gem
   loader.inflector.inflect(
-    "tint_me" => "TIntMe"
+    "tint_me" => "TIntMe",
+    "sgr_builder" => "SGRBuilder"
   )
   loader.ignore("#{__dir__}/tint_me/version.rb")
   loader.setup
