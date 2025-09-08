@@ -42,6 +42,5 @@ Gem::Specification.new do |spec|
   # Dependencies
   spec.add_dependency "dry-schema", "~> 1.13"
   spec.add_dependency "dry-types", "~> 1.7"
-  spec.add_dependency "paint", "~> 2.0"
   spec.add_dependency "zeitwerk", "~> 2.6"
 end
