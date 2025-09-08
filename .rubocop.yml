@@ -5,7 +5,6 @@ AllCops:
   Exclude:
     - bin/**/*
     - vendor/**/*
-    - fasti/**/*
   ExtraDetails: true
   NewCops: enable
   TargetRubyVersion: 3.2
