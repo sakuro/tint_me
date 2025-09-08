@@ -33,10 +33,57 @@ Layout/SpaceInsideBlockBraces:
   Exclude:
     - 'tint_me.gemspec'
 
+# Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+# Configuration parameters: AllowedMethods, AllowedPatterns, Max.
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+# Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+# Configuration parameters: Max, CountKeywordArgs, MaxOptionalParameters.
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+# Configuration parameters: AllowedMethods, AllowedPatterns, Max.
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
 # This cop supports safe autocorrection (--autocorrect).
 Performance/IoReadlines:
   Exclude:
     - 'tint_me.gemspec'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+RSpec/BeEq:
+  Exclude:
+    - 'spec/tint_me_spec.rb'
+
+# Configuration parameters: Max, CountAsOne.
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/tint_me/style_spec.rb'
+
+# Configuration parameters: Max.
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/tint_me/style_spec.rb'
+    - 'spec/tint_me_spec.rb'
+
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: AllowModifiersOnSymbols, AllowModifiersOnAttrs, AllowModifiersOnAliasMethod.
+# SupportedStyles: inline, group
+Style/AccessModifierDeclarations:
+  EnforcedStyle: group
 
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
