@@ -11,3 +11,9 @@
 .rspec_status
 # Gem should ignore Gemfile.lock
 Gemfile.lock
+
+# Project-specific ignores
+/fasti/
+/.serena/*
+!/.serena/project.yml
+/.mcp.json
