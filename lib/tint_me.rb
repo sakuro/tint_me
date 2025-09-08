@@ -12,4 +12,15 @@ module TIntMe
   )
   loader.ignore("#{__dir__}/tint_me/version.rb")
   loader.setup
+
+  # Shortcut method to create a Style instance
+  #
+  # @param options [Hash] Style options to pass to Style.new
+  # @return [Style] A new Style instance
+  # @example
+  #   blue = TIntMe[foreground: :blue]
+  #   bold_red = TIntMe[foreground: :red, bold: true]
+  def self.[](...)
+    Style.new(...)
+  end
 end
