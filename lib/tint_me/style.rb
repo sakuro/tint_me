@@ -45,48 +45,48 @@ module TIntMe
   #   )
   class Style
     # @!attribute [r] foreground
-    #   @return [Symbol, String] The foreground color (:red, :blue, hex "#FF0000", etc.)
+    #   @return [Symbol, String] The foreground color (:red, :blue, :default, :reset, hex "#FF0000", etc.)
 
     # @!attribute [r] background
     #   @return [Symbol, String] The background color (same format as foreground)
 
     # @!attribute [r] inverse
-    #   @return [nil, true, false] Whether to reverse foreground/background colors
+    #   @return [nil, true, false, :reset] Whether to reverse foreground/background colors
 
     # @!attribute [r] bold
-    #   @return [nil, true, false] Whether text is bold (mutually exclusive with faint)
+    #   @return [nil, true, false, :reset] Whether text is bold (mutually exclusive with faint)
 
     # @!attribute [r] faint
-    #   @return [nil, true, false] Whether text is faint/dim (mutually exclusive with bold)
+    #   @return [nil, true, false, :reset] Whether text is faint/dim (mutually exclusive with bold)
 
     # @!attribute [r] underline
-    #   @return [nil, true, false, :double] Underline decoration type
+    #   @return [nil, true, false, :double, :reset] Underline decoration type
 
     # @!attribute [r] overline
-    #   @return [nil, true, false] Whether text has overline decoration
+    #   @return [nil, true, false, :reset] Whether text has overline decoration
 
     # @!attribute [r] blink
-    #   @return [nil, true, false] Whether text blinks
+    #   @return [nil, true, false, :reset] Whether text blinks
 
     # @!attribute [r] italic
-    #   @return [nil, true, false] Whether text is italic
+    #   @return [nil, true, false, :reset] Whether text is italic
 
     # @!attribute [r] conceal
-    #   @return [nil, true, false] Whether text is hidden/concealed
+    #   @return [nil, true, false, :reset] Whether text is hidden/concealed
 
     # Initialize a new Style with the given attributes
     #
     # @param foreground [Symbol, String] Foreground color. Accepts color names (:red, :green, :blue, etc.),
-    #   :default for terminal default, or hex strings ("#FF0000", "FF0000")
+    #   :default for terminal default, :reset for composition clearing, or hex strings ("#FF0000", "FF0000")
     # @param background [Symbol, String] Background color. Same format as foreground
-    # @param inverse [nil, true, false] Reverse foreground/background colors
-    # @param bold [nil, true, false] Bold text (mutually exclusive with faint)
-    # @param faint [nil, true, false] Faint/dim text (mutually exclusive with bold)
-    # @param underline [nil, true, false, :double] Underline decoration
-    # @param overline [nil, true, false] Overline decoration
-    # @param blink [nil, true, false] Blinking text
-    # @param italic [nil, true, false] Italic text
-    # @param conceal [nil, true, false] Hidden/concealed text
+    # @param inverse [nil, true, false, :reset] Reverse foreground/background colors
+    # @param bold [nil, true, false, :reset] Bold text (mutually exclusive with faint)
+    # @param faint [nil, true, false, :reset] Faint/dim text (mutually exclusive with bold)
+    # @param underline [nil, true, false, :double, :reset] Underline decoration
+    # @param overline [nil, true, false, :reset] Overline decoration
+    # @param blink [nil, true, false, :reset] Blinking text
+    # @param italic [nil, true, false, :reset] Italic text
+    # @param conceal [nil, true, false, :reset] Hidden/concealed text
     # @raise [ArgumentError] If both bold and faint are true
     # @raise [ArgumentError] If any parameter has invalid type or value
     # @example Valid usage
