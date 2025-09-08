@@ -14,7 +14,7 @@ module TIntMe
     :conceal
   )
 
-  # A style class that wraps Paint gem functionality for applying ANSI colors and text effects.
+  # A style class for applying ANSI colors and text effects to terminal output.
   #
   # This class provides an immutable way to define and compose terminal styling options.
   # It supports foreground/background colors, text decorations (bold, italic, underline, etc.),
@@ -137,7 +137,7 @@ module TIntMe
       super
     end
 
-    # Apply the style to the given text using Paint gem
+    # Apply the style to the given text using native ANSI escape sequences
     #
     # @param text [String] The text to apply styling to
     # @return [String] The styled text with ANSI escape codes, or original text if no styles are set

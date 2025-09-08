@@ -19,9 +19,9 @@ module TIntMe
     type color_value = :red | :green | :blue | :cyan | :yellow | :magenta | :gray | :white | :black | :default | :reset | String
     type underline_value = bool | :double | :reset
     type boolean_value = bool | :reset
-    type paint_style = :red | :green | :blue | :cyan | :yellow | :magenta | :gray | :white | :black |
-                      :underline | :double_underline | :overline | :bold | :faint | :blink | :italic | :inverse | :conceal |
-                      String | nil
+    type style_attribute = :red | :green | :blue | :cyan | :yellow | :magenta | :gray | :white | :black |
+                          :underline | :double_underline | :overline | :bold | :faint | :blink | :italic | :inverse | :conceal |
+                          String | nil
 
     attr_reader foreground: color_value?
     attr_reader background: color_value?
@@ -57,6 +57,5 @@ module TIntMe
 
     def compose_attribute: ((color_value | underline_value | boolean_value)?, (color_value | underline_value | boolean_value)?) -> (color_value | underline_value | boolean_value)?
 
-    def build_styles: -> Array[paint_style]
   end
 end
