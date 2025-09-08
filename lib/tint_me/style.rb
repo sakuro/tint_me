@@ -13,7 +13,7 @@ module TIntMe
     :overline,
     :blink,
     :italic,
-    :hide
+    :conceal
   )
 
   # A style class that wraps Paint gem functionality for applying ANSI colors and text effects.
@@ -41,7 +41,7 @@ module TIntMe
   #     underline: :double,         # nil, false, true, :double
   #     italic: true,               # nil, false, true
   #     inverse: true,              # nil, false, true
-  #     # ... other boolean effects: overline, blink, hide
+  #     # ... other boolean effects: overline, blink, conceal
   #   )
   class Style
     # @!attribute [r] foreground
@@ -71,7 +71,7 @@ module TIntMe
     # @!attribute [r] italic
     #   @return [nil, true, false] Whether text is italic
 
-    # @!attribute [r] hide
+    # @!attribute [r] conceal
     #   @return [nil, true, false] Whether text is hidden/concealed
 
     # Initialize a new Style with the given attributes
@@ -86,7 +86,7 @@ module TIntMe
     # @param overline [nil, true, false] Overline decoration
     # @param blink [nil, true, false] Blinking text
     # @param italic [nil, true, false] Italic text
-    # @param hide [nil, true, false] Hidden/concealed text
+    # @param conceal [nil, true, false] Hidden/concealed text
     # @raise [ArgumentError] If both bold and faint are true
     # @raise [ArgumentError] If any parameter has invalid type or value
     # @example Valid usage
@@ -107,7 +107,7 @@ module TIntMe
       overline: nil,
       blink: nil,
       italic: nil,
-      hide: nil
+      conceal: nil
     )
       # Schema validation
       result = Schema.call({
@@ -120,7 +120,7 @@ module TIntMe
         overline:,
         blink:,
         italic:,
-        hide:
+        conceal:
       })
 
       raise ArgumentError, result.errors.to_h unless result.success?
@@ -184,7 +184,7 @@ module TIntMe
     # </table>
     #
     # This applies to all attributes: colors (foreground, background) and
-    # style attributes (bold, italic, underline, inverse, overline, blink, hide).
+    # style attributes (bold, italic, underline, inverse, overline, blink, conceal).
     #
     # @param other [Style] The style to compose with this one
     # @return [Style] A new Style instance with composed attributes
@@ -235,7 +235,7 @@ module TIntMe
         overline: compose_attribute(overline, other.overline),
         blink: compose_attribute(blink, other.blink),
         italic: compose_attribute(italic, other.italic),
-        hide: compose_attribute(hide, other.hide)
+        conceal: compose_attribute(conceal, other.conceal)
       )
     end
 
@@ -281,7 +281,7 @@ module TIntMe
       styles << :blink if blink == true
       styles << :italic if italic == true
       styles << :inverse if inverse == true
-      styles << :hide if hide == true
+      styles << :conceal if conceal == true
 
       styles
     end

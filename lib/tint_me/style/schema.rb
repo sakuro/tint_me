@@ -15,7 +15,7 @@ module TIntMe
       optional(:overline).value(Types::BooleanOption)
       optional(:blink).value(Types::BooleanOption)
       optional(:italic).value(Types::BooleanOption)
-      optional(:hide).value(Types::BooleanOption)
+      optional(:conceal).value(Types::BooleanOption)
     }
     private_constant :Schema
   end

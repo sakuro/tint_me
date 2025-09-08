@@ -5,7 +5,7 @@ A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! p
 ## Features
 
 - **Rich Color Support**: Foreground and background colors with support for standard colors and hex values
-- **Text Effects**: Bold, italic, underline, overline, blink, faint, inverse, and hidden text
+- **Text Effects**: Bold, italic, underline, overline, blink, faint, inverse, and concealed text
 - **Style Composition**: Combine multiple styles using the `>>` operator for layered styling
 - **Immutable Design**: All style operations return new instances, making them safe for concurrent use
 - **Zeitwerk Integration**: Automatic loading with proper module organization
@@ -62,6 +62,7 @@ TIntMe[bold: true]
 TIntMe[italic: true]
 TIntMe[underline: true]
 TIntMe[underline: :double]  # Double underline
+TIntMe[conceal: true]       # Hidden/concealed text
 
 # Multiple effects
 TIntMe[foreground: :green, bold: true, underline: true]

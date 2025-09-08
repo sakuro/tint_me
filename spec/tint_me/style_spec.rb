@@ -87,9 +87,9 @@ RSpec.describe TIntMe::Style do
         blink: true,
         italic: true,
         inverse: true,
-        hide: true
+        conceal: true
       )
-      expected_styles = %i[green yellow underline overline bold blink italic inverse hide]
+      expected_styles = %i[green yellow underline overline bold blink italic inverse conceal]
       expect(style.call("test")).to eq(Paint["test", *expected_styles])
     end
   end
@@ -228,7 +228,7 @@ RSpec.describe TIntMe::Style do
         inverse: :inverse,
         blink: :blink,
         overline: :overline,
-        hide: :hide
+        conceal: :conceal
       }
 
       effects.each do |param, paint_effect|
