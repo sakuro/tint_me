@@ -73,6 +73,7 @@ module TIntMe
 
     # @!attribute [r] hide
     #   @return [nil, true, false] Whether text is hidden/concealed
+
     # Initialize a new Style with the given attributes
     #
     # @param foreground [Symbol, String] Foreground color. Accepts color names (:red, :green, :blue, etc.),
