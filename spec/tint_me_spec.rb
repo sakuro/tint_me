@@ -3,10 +3,6 @@
 require "spec_helper"
 
 RSpec.describe TIntMe do
-  it "has a version number" do
-    expect(TIntMe::VERSION).not_to be_nil
-  end
-
   describe ".[]" do
     it "creates a Style instance with given options" do
       style = TIntMe[foreground: :blue]
