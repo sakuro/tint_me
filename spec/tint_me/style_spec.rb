@@ -205,7 +205,7 @@ RSpec.describe TIntMe::Style do
     end
   end
 
-  describe "Paint gem color compatibility" do
+  describe "color support" do
     it "supports basic color names" do
       expect(TIntMe::Style.new(foreground: :red).call("TEST")).to eq("#{esc}[31mTEST#{esc}[0m")
       expect(TIntMe::Style.new(foreground: :green).call("TEST")).to eq("#{esc}[32mTEST#{esc}[0m")
