@@ -1,4 +1,4 @@
-# TIntMe! :art:
+# :lipstick: TIntMe! :nail_care:
 
 A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! provides an elegant and composable API for applying colors, text decorations, and formatting to terminal output.
 
