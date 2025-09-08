@@ -17,8 +17,8 @@ RSpec.describe TIntMe do
     it "passes all options to Style.new" do
       style = TIntMe[foreground: :red, bold: true, underline: true]
       expect(style.foreground).to eq(:red)
-      expect(style.bold).to eq(true)
-      expect(style.underline).to eq(true)
+      expect(style.bold).to be(true)
+      expect(style.underline).to be(true)
     end
 
     it "works with no arguments" do
