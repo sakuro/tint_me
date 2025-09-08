@@ -8,8 +8,13 @@ Gem::Specification.new do |spec|
   spec.authors = ["OZAWA Sakuro"]
   spec.email = ["10973+sakuro@users.noreply.github.com"]
 
-  spec.summary = "tint_me"
-  spec.description = "tint_me"
+  spec.summary = "Functional terminal text styling with composable ANSI colors and effects"
+  spec.description = <<~DESC
+    A Ruby library for terminal text styling with ANSI colors and effects.
+    Provides an elegant, functional API with immutable style objects that can be
+    composed using the >> operator. Supports standard colors, hex values,
+    and comprehensive text effects like bold, italic, and underline.
+  DESC
   spec.homepage = "https://github.com/sakuro/tint_me"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.9"

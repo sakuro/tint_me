@@ -1,28 +1,97 @@
-# TIntMe
+# TIntMe! :art:
 
-TODO: Delete this and the text below, and describe your gem
+A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! provides an elegant and composable API for applying colors, text decorations, and formatting to terminal output.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tint_me`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Features
+
+- **Rich Color Support**: Foreground and background colors with support for standard colors and hex values
+- **Text Effects**: Bold, italic, underline, overline, blink, faint, inverse, and hidden text
+- **Style Composition**: Combine multiple styles using the `>>` operator for layered styling
+- **Immutable Design**: All style operations return new instances, making them safe for concurrent use
+- **Zeitwerk Integration**: Automatic loading with proper module organization
+- **Comprehensive API**: Both explicit `Style.new` and convenient `TIntMe[]` shortcut syntax
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
+Add this line to your application's Gemfile:
 
 ```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle add tint_me
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install it yourself as:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install tint_me
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+### Basic Styling
+
+```ruby
+require 'tint_me'
+
+# Create a style
+red_style = TIntMe::Style.new(foreground: :red)
+puts red_style.call("Hello World")
+
+# Using the shortcut syntax
+blue_style = TIntMe[foreground: :blue, bold: true]
+puts blue_style["Hello World"]
+```
+
+### Color Options
+
+```ruby
+# Standard colors
+TIntMe[foreground: :red]
+TIntMe[background: :yellow]
+
+# Hex colors (with or without #)
+TIntMe[foreground: "#FF0000"]
+TIntMe[background: "#00FF00"]
+TIntMe[foreground: "FF0000"]
+```
+
+### Text Effects
+
+```ruby
+# Individual effects
+TIntMe[bold: true]
+TIntMe[italic: true]
+TIntMe[underline: true]
+TIntMe[underline: :double]  # Double underline
+
+# Multiple effects
+TIntMe[foreground: :green, bold: true, underline: true]
+```
+
+### Style Composition
+
+```ruby
+# Base styling
+base = TIntMe[foreground: :blue]
+emphasis = TIntMe[bold: true, underline: true]
+
+# Combine styles (right-hand style takes precedence)
+combined = base >> emphasis
+puts combined.call("Styled text")
+
+# Chain multiple compositions
+final = base >> emphasis >> TIntMe[background: :white]
+```
+
+### Method Aliases
+
+```ruby
+style = TIntMe[foreground: :red, bold: true]
+
+# All of these are equivalent
+puts style.call("Hello")
+puts style["Hello"]
+puts style.("Hello")  # Callable syntax
+```
 
 ## Development
 
