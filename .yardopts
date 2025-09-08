@@ -1,0 +1,6 @@
+--output-dir docs/api
+--markup markdown
+--markup-provider redcarpet
+--readme README.md
+--title "TIntMe! API Documentation"
+lib/**/*.rb
