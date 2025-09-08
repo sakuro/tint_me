@@ -13,7 +13,9 @@ Gem::Specification.new do |spec|
     A Ruby library for terminal text styling with ANSI colors and effects.
     Provides an elegant, functional API with immutable style objects that can be
     composed using the >> operator. Supports standard colors, hex values,
-    and comprehensive text effects like bold, italic, and underline.
+    and comprehensive text effects including bold, faint, italic, underline,
+    overline, blink, inverse, and concealed text. Features type-safe argument
+    validation using dry-schema and dry-types.
   DESC
   spec.homepage = "https://github.com/sakuro/tint_me"
   spec.license = "MIT"
