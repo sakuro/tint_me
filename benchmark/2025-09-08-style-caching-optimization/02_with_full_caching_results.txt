@@ -1,0 +1,54 @@
+OPTIMIZED BENCHMARK RESULTS (After Caching Implementation)
+==========================================================
+Date: 2025-09-08
+
+## Performance Summary
+
+### Style Application (operations/second)
+- Simple style: ~5.44M ops/s (184ns per call)
+- Complex style: ~3.83M ops/s (261ns per call)  
+- Hex color style: ~4.66M ops/s (215ns per call)
+
+### Repeated Application (1000x)
+- Simple style: 6,383 ops/s (157μs total)
+- Complex style: 4,294 ops/s (233μs total)
+- Hex style: 5,343 ops/s (187μs total)
+
+### Memory Usage
+- Simple style creation: 6.1KB, 58 objects (+350 bytes, +6 objects)
+- Complex style creation: 7.8KB, 79 objects (+1.2KB, +13 objects)
+- Simple style application: 424 bytes, 3 objects
+- Complex style application: 264 bytes, 2 objects
+
+### Object Allocations (100 applications)
+- Simple style: 104 objects (85% reduction)
+- Complex style: 104 objects (91% reduction)
+
+## Performance Improvements
+
+### Speed Improvements
+- Simple style: 7.1x faster (766k → 5.44M ops/s)
+- Complex style: 8.8x faster (437k → 3.83M ops/s)
+- Hex color style: 17.5x faster (266k → 4.66M ops/s)
+
+### Object Allocation Reductions
+- Simple style: 85% fewer objects (703 → 104)
+- Complex style: 91% fewer objects (1203 → 104)
+
+### Repeated Application Improvements
+- Simple style: 8.2x faster (781 → 6,383 ops/s)
+- Complex style: 9.9x faster (433 → 4,294 ops/s)
+- Hex style: 20.2x faster (265 → 5,343 ops/s)
+
+## Memory Trade-offs
+- Style creation memory increase: 6-18% higher
+- Per-application memory usage: Dramatically reduced
+- Overall memory efficiency: Much better for repeated use
+
+## Key Observations
+
+1. **Massive performance gains**: 7-18x faster style application
+2. **Dramatic allocation reduction**: 85-91% fewer objects
+3. **Consistent performance**: Style complexity no longer impacts speed significantly
+4. **Memory trade-off acceptable**: Small creation overhead, huge runtime savings
+5. **Hex colors now fast**: RGB conversion cached at creation time

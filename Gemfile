@@ -9,6 +9,10 @@ group :development, :test do
 
   gem "irb"
   gem "repl_type_completor"
+
+  # Benchmarking
+  gem "benchmark-ips" # Performance benchmarking
+  gem "benchmark-memory" # Memory profiling for benchmarks
 end
 
 group :development do

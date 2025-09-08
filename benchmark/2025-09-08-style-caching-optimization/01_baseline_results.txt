@@ -1,0 +1,39 @@
+BASELINE BENCHMARK RESULTS (Before Optimization)
+=================================================
+Date: 2025-09-08
+
+## Performance Summary
+
+### Style Application (operations/second)
+- Simple style: ~766k ops/s (1.3μs per call)
+- Complex style: ~437k ops/s (2.3μs per call)  
+- Hex color style: ~266k ops/s (3.8μs per call)
+
+### Repeated Application (1000x)
+- Simple style: 781 ops/s (1.28ms total)
+- Complex style: 433 ops/s (2.31ms total)
+- Hex style: 265 ops/s (3.78ms total)
+
+### Memory Usage
+- Simple style creation: 5.8KB, 52 objects
+- Complex style creation: 6.6KB, 66 objects
+- Simple style application (first): 45KB, 466 objects
+- Complex style application (subsequent): 1.1KB, 14 objects
+
+### Object Allocations (100 applications)
+- Simple style: 703 objects
+- Complex style: 1203 objects
+
+## Key Observations
+
+1. **Performance overhead**: Each call recalculates SGR sequences
+2. **Object allocations**: Significant allocations on every call
+3. **Hex colors slower**: RGB conversion adds ~45% overhead
+4. **Complex styles slower**: More parameters = more processing
+
+## Expected Improvements with Caching
+
+- Reduced object allocations per call
+- Consistent performance regardless of style complexity
+- Minimal overhead for repeated applications
+- Trade-off: Slightly higher memory per Style instance

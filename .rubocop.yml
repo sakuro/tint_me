@@ -51,3 +51,12 @@ RSpec/SpecFilePathFormat:
   CustomTransform:
     TIntMe: tint_me
 
+# Benchmark scripts are allowed to use top-level methods and may not need documentation
+Style/TopLevelMethodDefinition:
+  Exclude:
+    - 'benchmark/**/*'
+
+Style/DocumentationMethod:
+  Exclude:
+    - 'benchmark/**/*'
+
