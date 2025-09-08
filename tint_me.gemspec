@@ -44,7 +44,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dry-types", "~> 1.7"
   spec.add_dependency "paint", "~> 2.0"
   spec.add_dependency "zeitwerk", "~> 2.6"
-
-  # For more information and examples about making a new gem, check out our
-  # guide at: https://bundler.io/guides/creating_gem.html
 end
