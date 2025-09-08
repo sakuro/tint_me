@@ -44,19 +44,50 @@ module TIntMe
   #     # ... other boolean effects: overline, blink, hide
   #   )
   class Style
+    # @!attribute [r] foreground
+    #   @return [Symbol, String] The foreground color (:red, :blue, hex "#FF0000", etc.)
+
+    # @!attribute [r] background
+    #   @return [Symbol, String] The background color (same format as foreground)
+
+    # @!attribute [r] inverse
+    #   @return [nil, true, false] Whether to reverse foreground/background colors
+
+    # @!attribute [r] bold
+    #   @return [nil, true, false] Whether text is bold (mutually exclusive with faint)
+
+    # @!attribute [r] faint
+    #   @return [nil, true, false] Whether text is faint/dim (mutually exclusive with bold)
+
+    # @!attribute [r] underline
+    #   @return [nil, true, false, :double] Underline decoration type
+
+    # @!attribute [r] overline
+    #   @return [nil, true, false] Whether text has overline decoration
+
+    # @!attribute [r] blink
+    #   @return [nil, true, false] Whether text blinks
+
+    # @!attribute [r] italic
+    #   @return [nil, true, false] Whether text is italic
+
+    # @!attribute [r] hide
+    #   @return [nil, true, false] Whether text is hidden/concealed
     # Initialize a new Style with the given attributes
     #
-    # @param foreground [Symbol, String] Foreground color (:default, :red, :green, :blue, etc. or hex "#FF0000")
-    # @param background [Symbol, String] Background color (same options as foreground)
-    # @param inverse [nil, Boolean] Reverse foreground/background colors (nil=unset, false=off, true=on)
-    # @param bold [nil, Boolean] Bold text (nil=unset, false=off, true=on, mutually exclusive with faint)
-    # @param faint [nil, Boolean] Faint text (nil=unset, false=off, true=on, mutually exclusive with bold)
-    # @param underline [nil, Boolean, Symbol] Underline (nil=unset, false=off, true=on, :double=double underline)
-    # @param overline [nil, Boolean] Overline (nil=unset, false=off, true=on)
-    # @param blink [nil, Boolean] Blinking text (nil=unset, false=off, true=on)
-    # @param italic [nil, Boolean] Italic text (nil=unset, false=off, true=on)
-    # @param hide [nil, Boolean] Hidden text (nil=unset, false=off, true=on)
-    # @raise [ArgumentError] If both bold and faint are true, or if underline has invalid value
+    # @param foreground [Symbol, String] Foreground color. Accepts color names (:red, :green, :blue, etc.),
+    #   :default for terminal default, or hex strings ("#FF0000", "FF0000")
+    # @param background [Symbol, String] Background color. Same format as foreground
+    # @param inverse [nil, true, false] Reverse foreground/background colors
+    # @param bold [nil, true, false] Bold text (mutually exclusive with faint)
+    # @param faint [nil, true, false] Faint/dim text (mutually exclusive with bold)
+    # @param underline [nil, true, false, :double] Underline decoration
+    # @param overline [nil, true, false] Overline decoration
+    # @param blink [nil, true, false] Blinking text
+    # @param italic [nil, true, false] Italic text
+    # @param hide [nil, true, false] Hidden/concealed text
+    # @raise [ArgumentError] If both bold and faint are true
+    # @raise [ArgumentError] If underline value is invalid (not nil, true, false, or :double)
     def initialize(
       foreground: :default,
       background: :default,
@@ -80,7 +111,11 @@ module TIntMe
     # Apply the style to the given text using Paint gem
     #
     # @param text [String] The text to apply styling to
-    # @return [String] The styled text with ANSI escape codes, or plain text if no styles
+    # @return [String] The styled text with ANSI escape codes, or original text if no styles are set
+    # @example
+    #   style = Style.new(foreground: :red, bold: true)
+    #   style.call("Hello")  # => "\e[31;1mHello\e[0m"
+    #   style["World"]       # => "\e[31;1mWorld\e[0m" (alias)
     def call(text)
       styles = build_styles
       if styles.empty?
@@ -92,15 +127,20 @@ module TIntMe
 
     alias [] call
 
-    # Compose this style with another style, with the other style taking precedence
-    # for explicitly set values. nil values in the other style preserve this style's values.
+    # Compose this style with another style, creating a new Style instance.
+    # The right-hand style takes precedence for non-nil values.
+    # Handles bold/faint mutual exclusion automatically.
     #
     # @param other [Style] The style to compose with this one
     # @return [Style] A new Style instance with composed attributes
-    # @example
+    # @example Basic composition
     #   base = Style.new(foreground: :red, bold: true)
     #   overlay = Style.new(background: :blue, underline: true)
-    #   result = base >> overlay  # red text, blue background, bold and underlined
+    #   result = base >> overlay  # => red text, blue background, bold and underlined
+    # @example Bold/faint handling
+    #   bold_style = Style.new(bold: true)
+    #   faint_style = Style.new(faint: true)
+    #   result = bold_style >> faint_style  # => faint overrides bold
     def >>(other)
       # Handle bold/faint mutual exclusion in composition
       composed_bold = other.bold.nil? ? bold : other.bold
