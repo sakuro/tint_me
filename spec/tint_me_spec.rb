@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe TIntMe do
   describe ".[]" do
     it "creates a Style instance with given options" do

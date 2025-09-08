@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "paint"
-require "spec_helper"
-
 RSpec.describe TIntMe::Style do
   describe "#initialize" do
     it "creates a Style with default values" do
