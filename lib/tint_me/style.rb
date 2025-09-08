@@ -87,7 +87,15 @@ module TIntMe
     # @param italic [nil, true, false] Italic text
     # @param hide [nil, true, false] Hidden/concealed text
     # @raise [ArgumentError] If both bold and faint are true
-    # @raise [ArgumentError] If underline value is invalid (not nil, true, false, or :double)
+    # @raise [ArgumentError] If any parameter has invalid type or value
+    # @example Valid usage
+    #   Style.new(foreground: :red, bold: true)
+    #   Style.new(underline: :double, background: "#FF0000")
+    # @example Invalid usage (raises ArgumentError)
+    #   Style.new(foreground: 123)        # Invalid color type
+    #   Style.new(bold: "true")           # Invalid boolean type
+    #   Style.new(underline: :invalid)    # Invalid underline option
+    #   Style.new(bold: true, faint: true) # Mutually exclusive options
     def initialize(
       foreground: :default,
       background: :default,
@@ -100,6 +108,22 @@ module TIntMe
       italic: nil,
       hide: nil
     )
+      # Schema validation
+      result = Schema.call({
+        foreground:,
+        background:,
+        inverse:,
+        bold:,
+        faint:,
+        underline:,
+        overline:,
+        blink:,
+        italic:,
+        hide:
+      })
+
+      raise ArgumentError, result.errors.to_h unless result.success?
+
       # Handle bold/faint mutual exclusion
       if bold && faint
         raise ArgumentError, "Cannot specify both bold and faint simultaneously"

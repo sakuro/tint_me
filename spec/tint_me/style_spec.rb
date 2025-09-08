@@ -35,7 +35,32 @@ RSpec.describe TIntMe::Style do
     end
 
     it "rejects invalid underline values" do
-      expect { TIntMe::Style.new(underline: :invalid).call("test") }.to raise_error(ArgumentError, "Invalid underline value: :invalid")
+      expect { TIntMe::Style.new(underline: :invalid) }.to raise_error(ArgumentError, /underline/)
+    end
+
+    it "rejects invalid color types" do
+      expect { TIntMe::Style.new(foreground: 123) }.to raise_error(ArgumentError, /foreground/)
+    end
+
+    it "rejects invalid color names" do
+      expect { TIntMe::Style.new(foreground: :orange) }.to raise_error(ArgumentError, /foreground/)
+    end
+
+    it "rejects invalid hex colors" do
+      expect { TIntMe::Style.new(foreground: "#GGG") }.to raise_error(ArgumentError, /foreground/)
+      expect { TIntMe::Style.new(foreground: "#12") }.to raise_error(ArgumentError, /foreground/)
+      expect { TIntMe::Style.new(foreground: "#1234567") }.to raise_error(ArgumentError, /foreground/)
+    end
+
+    it "accepts valid hex colors" do
+      expect { TIntMe::Style.new(foreground: "#123") }.not_to raise_error
+      expect { TIntMe::Style.new(foreground: "#123456") }.not_to raise_error
+      expect { TIntMe::Style.new(foreground: "123") }.not_to raise_error
+      expect { TIntMe::Style.new(foreground: "123456") }.not_to raise_error
+    end
+
+    it "rejects invalid boolean types" do
+      expect { TIntMe::Style.new(bold: "true") }.to raise_error(ArgumentError, /bold/)
     end
 
     it "handles bold and faint mutual exclusion" do
