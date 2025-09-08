@@ -238,14 +238,14 @@ RSpec.describe TIntMe::SGRBuilder do
 
   describe "constants" do
     it "defines expected constants" do
-      expect(described_class::ESC).to eq("\e")
-      expect(described_class::CSI).to eq("\e[")
-      expect(described_class::SGR_END).to eq("m")
-      expect(described_class::RESET_CODE).to eq("\e[0m")
+      expect(TIntMe::SGRBuilder::ESC).to eq("\e")
+      expect(TIntMe::SGRBuilder::CSI).to eq("\e[")
+      expect(TIntMe::SGRBuilder::SGR_END).to eq("m")
+      expect(TIntMe::SGRBuilder::RESET_CODE).to eq("\e[0m")
     end
 
     it "includes all expected colors" do
-      colors = described_class::COLORS
+      colors = TIntMe::SGRBuilder::COLORS
 
       # Standard colors
       expect(colors[:red]).to eq(31)
@@ -271,7 +271,7 @@ RSpec.describe TIntMe::SGRBuilder do
     end
 
     it "includes all expected effects" do
-      effects = described_class::EFFECTS
+      effects = TIntMe::SGRBuilder::EFFECTS
 
       expect(effects[:bold]).to eq(1)
       expect(effects[:faint]).to eq(2)
