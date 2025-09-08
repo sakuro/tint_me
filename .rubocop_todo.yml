@@ -6,13 +6,3 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Configuration parameters: Max, CountAsOne.
-RSpec/ExampleLength:
-  Exclude:
-    - 'spec/tint_me/style_spec.rb'
-
-# Configuration parameters: Max.
-RSpec/MultipleExpectations:
-  Exclude:
-    - 'spec/tint_me/style_spec.rb'
-    - 'spec/tint_me_spec.rb'

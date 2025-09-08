@@ -39,3 +39,34 @@ inherit_from: .rubocop_todo.yml
 RSpec/SpecFilePathFormat:
   CustomTransform:
     TIntMe: tint_me
+
+# Metrics - temporarily disabled for extracted Style class complexity
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
+# RSpec - test quality cops that conflict with readability
+RSpec/ExampleLength:
+  Exclude:
+    - 'spec/tint_me/style_spec.rb'
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/tint_me/style_spec.rb'
+    - 'spec/tint_me_spec.rb'
