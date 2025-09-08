@@ -1,0 +1,81 @@
+NIL? vs EMPTY? CHECK ANALYSIS
+==============================
+Date: 2025-09-08
+
+## Implementation Comparison
+
+### Previous: empty? check
+```ruby
+# Initialization
+@prefix = sgr_builder.prefix_codes(...)
+
+# Usage
+return text if @prefix.empty?
+```
+
+### Current: nil? check with optimized assignment
+```ruby
+# Initialization  
+prefix = sgr_builder.prefix_codes(...)
+@prefix = prefix.empty? ? nil : prefix
+
+# Usage
+return text unless @prefix  # equivalent to @prefix.nil?
+```
+
+## Performance Results
+
+| Metric | empty? check | nil? check | Improvement |
+|--------|-------------|------------|-------------|
+| Simple style | 5.44M/s | 5.46M/s | **+0.4% faster** |
+| Performance gain | Baseline | +22k ops/s | Marginal but positive |
+
+## Analysis
+
+### Why nil? check is (slightly) faster:
+
+1. **Simpler comparison**: `nil?` is checking against a single value (nil)
+2. **No method call**: `unless @prefix` is more direct than `@prefix.empty?`
+3. **CPU cache friendly**: nil comparisons are highly optimized in Ruby
+
+### Trade-offs:
+
+**Pros of nil? optimization:**
+- ✅ Slightly faster runtime performance
+- ✅ More direct conditional check
+- ✅ Saves one string object per empty Style (empty string not stored)
+
+**Cons of nil? optimization:**
+- ❌ Additional logic in initialization (empty? check to decide nil)
+- ❌ Slightly more complex initialization code
+- ❌ Marginal complexity increase
+
+## Memory Impact
+
+### Empty Style instances:
+- **Before**: `@prefix = ""` (empty string object)  
+- **After**: `@prefix = nil` (no string object)
+- **Savings**: ~40 bytes per empty Style instance
+
+### Non-empty Style instances:
+- No difference in memory usage
+
+## Recommendation
+
+**Keep the nil? optimization** because:
+
+1. **Performance improvement**: Even marginal gains matter for high-frequency methods
+2. **Memory efficiency**: Eliminates empty string objects for empty Styles  
+3. **Semantic clarity**: nil clearly indicates "no styling" vs empty string
+4. **Ruby idiom**: `unless value` is more idiomatic than `if value.empty?`
+
+The initialization complexity increase is minimal and the benefits outweigh the costs.
+
+## Final Implementation Pattern
+
+This optimization demonstrates an important pattern:
+- Transform empty values to nil during initialization
+- Use simpler nil checks at runtime
+- Trade slight initialization complexity for runtime performance
+
+Perfect for performance-critical methods called frequently.

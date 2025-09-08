@@ -134,6 +134,39 @@ module TIntMe
         raise ArgumentError, "Cannot specify both bold and faint simultaneously"
       end
 
+      # Pre-calculate and cache SGR sequences before freezing
+      # (Data.define freezes the instance after super)
+      sgr_builder = self.class.sgr_builder
+
+      # Prepare color values
+      foreground_color = foreground if foreground && foreground != :default
+      background_color = background if background && background != :default
+
+      # Handle underline effect
+      underline_effect = case underline
+                         when true then true
+                         when :double then :double
+                         when nil, false then nil
+                         else raise ArgumentError, "Invalid underline value: #{underline.inspect}"
+                         end
+
+      # Calculate prefix once
+      @prefix = sgr_builder.prefix_codes(
+        foreground: foreground_color,
+        background: background_color,
+        bold: bold == true ? true : nil,
+        faint: faint == true ? true : nil,
+        italic: italic == true ? true : nil,
+        underline: underline_effect,
+        blink: blink == true ? true : nil,
+        inverse: inverse == true ? true : nil,
+        conceal: conceal == true ? true : nil,
+        overline: overline == true ? true : nil
+      )
+
+      # Cache reset code
+      @reset_code = sgr_builder.reset_code
+
       super
     end
 
@@ -146,41 +179,9 @@ module TIntMe
     #   style.call("Hello")  # => "\e[31;1mHello\e[0m"
     #   style["World"]       # => "\e[31;1mWorld\e[0m" (alias)
     def call(text)
-      sgr_builder = self.class.sgr_builder
+      return text if @prefix.empty?
 
-      # Prepare foreground color
-      foreground_color = foreground if foreground && foreground != :default
-
-      # Prepare background color
-      background_color = background if background && background != :default
-
-      # Handle underline effect
-      underline_effect = case underline
-                         when true
-                           true
-                         when :double
-                           :double
-                         when nil, false
-                           nil
-                         else
-                           raise ArgumentError, "Invalid underline value: #{underline.inspect}"
-                         end
-
-      prefix = sgr_builder.prefix_codes(
-        foreground: foreground_color,
-        background: background_color,
-        bold: bold == true ? true : nil,
-        faint: faint == true ? true : nil,
-        italic: italic == true ? true : nil,
-        underline: underline_effect,
-        blink: blink == true ? true : nil,
-        inverse: inverse == true ? true : nil,
-        conceal: conceal == true ? true : nil,
-        overline: overline == true ? true : nil
-      )
-      return text if prefix.empty?
-
-      "#{prefix}#{text}#{sgr_builder.reset_code}"
+      "#{@prefix}#{text}#{@reset_code}"
     end
 
     alias [] call

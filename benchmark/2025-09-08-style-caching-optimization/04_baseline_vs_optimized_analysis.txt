@@ -1,0 +1,65 @@
+PERFORMANCE COMPARISON ANALYSIS
+===============================
+
+## Before vs After Optimization Summary
+
+### Style Application Performance (ops/second)
+| Style Type | Before    | After     | Improvement |
+|------------|-----------|-----------|-------------|
+| Simple     | 766,000   | 5,444,000 | 7.1x faster |
+| Complex    | 437,000   | 3,834,000 | 8.8x faster |
+| Hex Color  | 266,000   | 4,656,000 | 17.5x faster|
+
+### Repeated Application (1000x, ops/second)
+| Style Type | Before | After | Improvement |
+|------------|--------|-------|-------------|
+| Simple     | 781    | 6,383 | 8.2x faster |
+| Complex    | 433    | 4,294 | 9.9x faster |
+| Hex        | 265    | 5,343 | 20.2x faster|
+
+### Object Allocations (100 applications)
+| Style Type | Before | After | Reduction |
+|------------|--------|-------|-----------|
+| Simple     | 703    | 104   | 85% less  |
+| Complex    | 1,203  | 104   | 91% less  |
+
+### Memory Usage Per Style Creation
+| Style Type | Before        | After         | Increase |
+|------------|---------------|---------------|----------|
+| Simple     | 5.8KB, 52 obj| 6.1KB, 58 obj | +6%      |
+| Complex    | 6.6KB, 66 obj| 7.8KB, 79 obj | +18%     |
+
+## Key Insights
+
+### Performance Gains
+1. **Hex colors see biggest improvement**: 17.5-20x faster
+   - RGB conversion now happens once at creation instead of every call
+   
+2. **Complex styles benefit most**: 8.8-9.9x faster
+   - Multiple SGR parameters cached as single string
+   
+3. **Simple styles still significant**: 7.1-8.2x faster
+   - Even basic styles benefit from eliminating repeated calculation
+
+### Memory Trade-offs
+1. **Creation cost acceptable**: 6-18% increase in creation memory
+   - Small price for immutable objects that may be called many times
+   
+2. **Runtime memory much better**: Massive reduction in per-call allocations
+   - 85-91% fewer objects created during style application
+   
+3. **Net positive for typical usage**: Any style called >2-3 times benefits
+
+### Algorithm Complexity Improvements
+1. **Before**: O(n) per call where n = number of style attributes
+2. **After**: O(1) per call - just string concatenation
+3. **One-time cost**: SGR sequence building moved to initialization
+
+## Recommendation
+The optimization is highly successful with minimal downsides:
+- Dramatic performance improvements across all scenarios
+- Acceptable memory trade-off for creation
+- Maintains identical API and behavior
+- Especially beneficial for repeated use (the common case)
+
+This change transforms Style from a computation-heavy operation to a simple string concatenation, making it suitable for high-frequency styling operations.

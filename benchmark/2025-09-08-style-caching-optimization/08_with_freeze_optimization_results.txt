@@ -1,0 +1,107 @@
+============================================================
+TIntMe Style Performance Benchmark
+============================================================
+
+Memory Usage Analysis:
+----------------------------------------
+Calculating -------------------------------------
+ Create simple style     6.056k memsize (     0.000  retained)
+                        58.000  objects (     0.000  retained)
+                         2.000  strings (     0.000  retained)
+Create complex style     7.752k memsize (     0.000  retained)
+                        79.000  objects (     0.000  retained)
+                         9.000  strings (     0.000  retained)
+Apply simple style (short text)
+                       424.000  memsize (     0.000  retained)
+                         3.000  objects (     0.000  retained)
+                         1.000  strings (     0.000  retained)
+Apply complex style (short text)
+                       264.000  memsize (     0.000  retained)
+                         2.000  objects (     0.000  retained)
+                         1.000  strings (     0.000  retained)
+
+Comparison:
+Apply complex style (short text):        264 allocated
+Apply simple style (short text):        424 allocated - 1.61x more
+ Create simple style:       6056 allocated - 22.94x more
+Create complex style:       7752 allocated - 29.36x more
+
+Performance Benchmark (operations per second):
+----------------------------------------
+ruby 3.2.9 (2025-07-24 revision 8f611e0c46) [arm64-darwin24]
+Warming up --------------------------------------
+ Create simple style     2.829k i/100ms
+Create complex style     2.405k i/100ms
+Apply simple style (short)
+                       551.851k i/100ms
+Apply simple style (medium)
+                       476.907k i/100ms
+Apply simple style (long)
+                       482.203k i/100ms
+Apply complex style (short)
+                       381.682k i/100ms
+Apply complex style (medium)
+                       455.559k i/100ms
+Apply complex style (long)
+                       417.965k i/100ms
+Apply hex style (short)
+                       470.351k i/100ms
+Calculating -------------------------------------
+ Create simple style     27.161k (± 6.4%) i/s   (36.82 μs/i) -    135.792k in   5.024378s
+Create complex style     23.009k (± 4.3%) i/s   (43.46 μs/i) -    115.440k in   5.027763s
+Apply simple style (short)
+                          5.264M (± 3.8%) i/s  (189.96 ns/i) -     26.489M in   5.039995s
+Apply simple style (medium)
+                          4.621M (± 3.1%) i/s  (216.40 ns/i) -     23.368M in   5.061823s
+Apply simple style (long)
+                          4.478M (± 4.8%) i/s  (223.34 ns/i) -     22.664M in   5.074611s
+Apply complex style (short)
+                          3.685M (± 2.4%) i/s  (271.36 ns/i) -     18.702M in   5.078168s
+Apply complex style (medium)
+                          4.536M (± 4.8%) i/s  (220.45 ns/i) -     22.778M in   5.036293s
+Apply complex style (long)
+                          4.271M (± 7.5%) i/s  (234.13 ns/i) -     21.316M in   5.031500s
+Apply hex style (short)
+                          4.558M (± 3.7%) i/s  (219.39 ns/i) -     23.047M in   5.063931s
+
+Comparison:
+Apply simple style (short):  5264329.5 i/s
+Apply simple style (medium):  4621101.0 i/s - 1.14x  slower
+Apply hex style (short):  4558064.1 i/s - 1.15x  slower
+Apply complex style (medium):  4536089.7 i/s - 1.16x  slower
+Apply simple style (long):  4477533.0 i/s - 1.18x  slower
+Apply complex style (long):  4271132.9 i/s - 1.23x  slower
+Apply complex style (short):  3685074.9 i/s - 1.43x  slower
+ Create simple style:    27161.3 i/s - 193.82x  slower
+Create complex style:    23008.5 i/s - 228.80x  slower
+
+
+Repeated Application Benchmark:
+----------------------------------------
+Applying the same style 1000 times to measure caching benefit...
+ruby 3.2.9 (2025-07-24 revision 8f611e0c46) [arm64-darwin24]
+Warming up --------------------------------------
+  1000x simple style   631.000 i/100ms
+ 1000x complex style   412.000 i/100ms
+     1000x hex style   540.000 i/100ms
+Calculating -------------------------------------
+  1000x simple style      6.203k (± 2.1%) i/s  (161.20 μs/i) -     31.550k in   5.088346s
+ 1000x complex style      4.119k (± 5.2%) i/s  (242.77 μs/i) -     20.600k in   5.018834s
+     1000x hex style      5.267k (± 2.8%) i/s  (189.85 μs/i) -     26.460k in   5.027249s
+
+Comparison:
+  1000x simple style:     6203.3 i/s
+     1000x hex style:     5267.4 i/s - 1.18x  slower
+ 1000x complex style:     4119.1 i/s - 1.51x  slower
+
+
+Object Allocation Analysis:
+----------------------------------------
+Create simple style: 117 objects allocated
+Create complex style: 136 objects allocated
+Apply simple style 100x: 103 objects allocated
+Apply complex style 100x: 103 objects allocated
+
+============================================================
+Benchmark complete!
+============================================================
