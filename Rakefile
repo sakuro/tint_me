@@ -11,4 +11,8 @@ RuboCop::RakeTask.new
 require "yard"
 YARD::Rake::YardocTask.new(:doc)
 
+require "rake/clean"
+CLEAN.include("coverage", ".yardoc", "docs/api", ".rspec_status")
+CLOBBER.include("pkg")
+
 task default: %i[spec rubocop]
