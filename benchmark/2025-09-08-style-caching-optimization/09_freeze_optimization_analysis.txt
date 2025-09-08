@@ -1,0 +1,49 @@
+FREEZE OPTIMIZATION ANALYSIS
+=============================
+Date: 2025-09-08
+
+## Implementation Change
+
+Added `.freeze` to the cached prefix string:
+
+```ruby
+# Before
+@prefix = sgr_builder.prefix_codes(...) 
+
+# After  
+@prefix = sgr_builder.prefix_codes(...).freeze
+```
+
+## Performance Comparison
+
+| Style Type | Without freeze | With freeze | Difference |
+|------------|----------------|-------------|------------|
+| Simple     | 5.44M/s        | 5.26M/s     | **3% slower** |
+| Complex    | 3.83M/s        | 3.69M/s     | **4% slower** |  
+| Hex Color  | 4.66M/s        | 4.56M/s     | **2% slower** |
+
+## Analysis
+
+### Why freeze didn't help (and slightly hurt):
+
+1. **String interpolation doesn't modify strings**: The operation `"#{@prefix}#{text}#{@reset_code}"` creates a new string without modifying the original strings, so freeze protection isn't needed.
+
+2. **Freeze call overhead**: The `.freeze` method call during initialization adds slight overhead without providing benefits for this use case.
+
+3. **Data.define already provides immutability**: The Style instance itself is frozen after `super`, providing sufficient protection.
+
+4. **Memory allocation patterns unchanged**: Freeze doesn't affect how string interpolation allocates memory.
+
+### When freeze would be beneficial:
+
+- If we were doing destructive operations like `@prefix << something`
+- If the strings were being passed to untrusted code
+- If we needed to prevent accidental modification in other parts of the codebase
+
+## Conclusion
+
+**Remove the freeze optimization** - it provides no performance benefit and adds unnecessary overhead.
+
+The original implementation without explicit freezing is optimal for this use case. Ruby's string interpolation is already highly optimized and doesn't require the strings to be frozen for maximum performance.
+
+**Recommendation**: Revert to the non-frozen version for best performance.

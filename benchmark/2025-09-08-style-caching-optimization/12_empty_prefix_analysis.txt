@@ -1,0 +1,81 @@
+EMPTY PREFIX ANALYSIS
+=====================
+Date: 2025-09-08
+
+## When @prefix is Empty
+
+Based on testing, `@prefix` becomes empty ("") in these cases:
+
+1. **No styling attributes**: `Style.new`
+2. **Nil values**: `Style.new(foreground: nil)`
+3. **Default values**: `Style.new(foreground: :default)`
+4. **False effects**: `Style.new(bold: false)`
+5. **Default instance**: `Style.new.to_h` result
+
+**Key Finding**: `@prefix` is NEVER nil, always either `""` (empty) or a non-empty string.
+
+## Usage Likelihood Analysis
+
+### High Probability Cases:
+- **Default/plain text styling**: Applications may use `Style.new` for conditional styling
+- **Template systems**: May create base styles that are sometimes empty
+- **Configuration-driven styling**: User settings might result in "no styling"
+
+### Low Probability Cases:
+- **Performance-critical code**: Unlikely to create empty styles intentionally
+- **Library internal usage**: Most internal usage probably has specific styling
+
+## Current vs Alternative Implementations
+
+### Current: `empty?` check
+```ruby
+def call(text)
+  return text if @prefix.empty?
+  "#{@prefix}#{text}#{@reset_code}"
+end
+```
+
+### Alternative 1: Length check
+```ruby
+def call(text)
+  return text if @prefix.length == 0
+  "#{@prefix}#{text}#{@reset_code}"
+end
+```
+
+### Alternative 2: String comparison
+```ruby  
+def call(text)
+  return text if @prefix == ""
+  "#{@prefix}#{text}#{@reset_code}"
+end
+```
+
+### Alternative 3: No check (always interpolate)
+```ruby
+def call(text)
+  "#{@prefix}#{text}#{@reset_code}"
+end
+```
+
+## Performance Considerations
+
+**If empty styles are rare (<5% of calls):**
+- Current `empty?` check may be unnecessary overhead
+- Alternative 3 (no check) might be faster overall
+
+**If empty styles are common (>20% of calls):**
+- Current implementation is optimal
+- Early return saves string interpolation cost
+
+## Recommendation for Testing
+
+Test Alternative 3 (no empty check) to see if:
+1. The empty check overhead exceeds the interpolation savings
+2. Performance improves when most styles are non-empty
+
+This would be especially valuable since empty styles might be rare in typical usage patterns.
+
+## Conclusion
+
+The `nil?` vs `empty?` question is moot since `@prefix` is never nil. The real question is whether the `empty?` check itself is worth the overhead for the expected usage patterns of the library.

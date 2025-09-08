@@ -1,0 +1,66 @@
+STRING CONCATENATION METHOD COMPARISON
+======================================
+Date: 2025-09-08
+
+## Performance Comparison: String Interpolation vs << Operator
+
+### Method Implementations
+
+#### String Interpolation (Original)
+```ruby
+def call(text)
+  return text if @prefix.empty?
+  "#{@prefix}#{text}#{@reset_code}"
+end
+```
+
+#### << Operator (Experimental) 
+```ruby
+def call(text)
+  return text if @prefix.empty?
+  @prefix.dup << text << @reset_code
+end
+```
+
+### Performance Results (ops/second)
+
+| Style Type | String Interpolation | << Operator | Performance Loss |
+|------------|---------------------|-------------|------------------|
+| Simple     | 5.44M/s             | 4.55M/s     | **16% slower**   |
+| Complex    | 3.83M/s             | 3.35M/s     | **13% slower**   |
+| Hex Color  | 4.66M/s             | 2.45M/s     | **47% slower**   |
+
+### Memory Usage (per application)
+
+| Implementation | Simple Style | Complex Style |
+|----------------|-------------|---------------|
+| String Interpolation | 424 bytes, 3 objects | 264 bytes, 2 objects |
+| << Operator          | 424 bytes, 3 objects | 264 bytes, 2 objects |
+
+*Memory usage appears identical*
+
+### Analysis
+
+#### Why << Operator is Slower:
+
+1. **Extra Copy Cost**: `@prefix.dup` creates unnecessary string copy
+2. **Multiple Operations**: Three separate `<<` calls vs single interpolation
+3. **Ruby Optimization**: String interpolation is highly optimized in Ruby
+4. **Hex Colors Impact**: Most significant performance hit (47% slower)
+
+#### Performance Loss Breakdown:
+
+- **Simple styles**: 16% slower due to dup + concatenation overhead
+- **Complex styles**: 13% slower, similar pattern
+- **Hex colors**: 47% slower, suggests interpolation especially optimized for longer strings
+
+### Conclusion
+
+**String interpolation (`"#{a}#{b}#{c}"`) is definitively superior** for this use case:
+
+- Consistently faster across all style types
+- No additional memory allocation overhead  
+- Leverages Ruby's built-in string interpolation optimizations
+- Simpler, more readable code
+
+The experiment confirms that the original implementation choice was optimal. Ruby's string interpolation is highly optimized and should be preferred over manual concatenation methods for performance-critical string building operations.

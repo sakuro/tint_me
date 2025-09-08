@@ -1,0 +1,74 @@
+CONSTANT ACCESS vs CACHING ANALYSIS
+====================================
+Date: 2025-09-08
+
+## Implementation Comparison
+
+### Caching Approach (Previous)
+```ruby
+# Initialization
+@reset_code = sgr_builder.reset_code
+
+# Usage
+"#{@prefix}#{text}#{@reset_code}"
+```
+
+### Constant Access Approach (Current)
+```ruby  
+# Initialization
+# (no @reset_code caching)
+
+# Usage  
+"#{@prefix}#{text}#{SGRBuilder::RESET_CODE}"
+```
+
+## Performance & Memory Results
+
+| Metric | Caching | Constant Access | Difference |
+|--------|---------|-----------------|------------|
+| **Performance** | 5.44M/s | 5.38M/s | **1% slower** |
+| **Creation Memory** | 6.1KB | 6.0KB | **8 bytes saved** |
+| **Runtime Memory** | 424 bytes | 616 bytes | **45% more** |
+
+## Analysis
+
+### Memory Trade-offs:
+
+**Creation Time:**
+- ✅ **8 bytes saved per Style instance** (no @reset_code storage)
+- Negligible but consistent savings
+
+**Runtime:**
+- ❌ **45% more memory per call** for simple styles (424 → 616 bytes)
+- Suggests constant lookup has slight overhead
+
+### Performance Impact:
+
+- **1% slower performance** - minimal but measurable
+- Constant lookup vs instance variable access overhead
+- Still much faster than baseline (5.38M vs 766k original)
+
+### Code Complexity:
+
+**Constant Access Pros:**
+- Slightly less memory per instance  
+- Fewer instance variables
+- Direct reference to source of truth
+
+**Caching Pros:**  
+- Faster runtime performance
+- Lower runtime memory usage
+- Simpler call method (no constant lookup)
+
+## Recommendation
+
+**Keep the caching approach** for optimal performance:
+
+1. **Performance priority**: The 1% performance difference matters for a performance-critical method
+2. **Runtime efficiency**: Lower memory usage during frequent calls
+3. **Minimal memory cost**: 8 bytes per instance is negligible for the benefits
+4. **Consistent pattern**: Matches the prefix caching strategy
+
+The reset_code is accessed on every Style#call, making instance variable access more efficient than constant lookup. The tiny memory savings don't justify the performance cost.
+
+**Final implementation: Cache both @prefix and @reset_code**
