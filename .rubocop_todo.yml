@@ -53,8 +53,3 @@ RSpec/MultipleExpectations:
   Exclude:
     - 'spec/tint_me/style_spec.rb'
     - 'spec/tint_me_spec.rb'
-
-# Configuration parameters: IgnoreModules.
-Style/ConstantVisibility:
-  Exclude:
-    - 'lib/tint_me/version.rb'
