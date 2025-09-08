@@ -127,9 +127,7 @@ module TIntMe
       )
     end
 
-    private
-
-    def build_styles
+    private def build_styles
       styles = []
 
       # Add colors individually
