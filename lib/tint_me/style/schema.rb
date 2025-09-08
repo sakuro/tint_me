@@ -6,8 +6,8 @@ module TIntMe
   class Style
     # Schema for validating Style initialization arguments
     Schema = Dry::Schema.define {
-      optional(:foreground).value(Types::Color)
-      optional(:background).value(Types::Color)
+      optional(:foreground).maybe(Types::Color)
+      optional(:background).maybe(Types::Color)
       optional(:inverse).value(Types::BooleanOption)
       optional(:bold).value(Types::BooleanOption)
       optional(:faint).value(Types::BooleanOption)

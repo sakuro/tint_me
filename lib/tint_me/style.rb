@@ -98,8 +98,8 @@ module TIntMe
     #   Style.new(underline: :invalid)    # Invalid underline option
     #   Style.new(bold: true, faint: true) # Mutually exclusive options
     def initialize(
-      foreground: :default,
-      background: :default,
+      foreground: nil,
+      background: nil,
       inverse: nil,
       bold: nil,
       faint: nil,
@@ -156,52 +156,109 @@ module TIntMe
     # The right-hand style takes precedence for non-nil values.
     # Handles bold/faint mutual exclusion automatically.
     #
+    # == Composition Rules
+    #
+    # For `a >> b`, the resulting value for each attribute is determined by:
+    #
+    # <table>
+    #   <tr>
+    #     <th>b's value</th>
+    #     <th>Result</th>
+    #     <th>Description</th>
+    #   </tr>
+    #   <tr>
+    #     <td><code>nil</code></td>
+    #     <td><code>a</code>'s value</td>
+    #     <td>Preserves the original value</td>
+    #   </tr>
+    #   <tr>
+    #     <td><code>:reset</code></td>
+    #     <td><code>nil</code></td>
+    #     <td>Explicitly resets to no styling</td>
+    #   </tr>
+    #   <tr>
+    #     <td>any other</td>
+    #     <td><code>b</code>'s value</td>
+    #     <td>Adopts the new value</td>
+    #   </tr>
+    # </table>
+    #
+    # This applies to all attributes: colors (foreground, background) and
+    # style attributes (bold, italic, underline, inverse, overline, blink, hide).
+    #
     # @param other [Style] The style to compose with this one
     # @return [Style] A new Style instance with composed attributes
+    #
     # @example Basic composition
     #   base = Style.new(foreground: :red, bold: true)
     #   overlay = Style.new(background: :blue, underline: true)
     #   result = base >> overlay  # => red text, blue background, bold and underlined
-    # @example Bold/faint handling
+    #
+    # @example Using nil to preserve values
+    #   styled = Style.new(foreground: :red, bold: true)
+    #   partial = Style.new(foreground: nil, italic: true)  # nil preserves red
+    #   result = styled >> partial  # => foreground: :red, bold: true, italic: true
+    #
+    # @example Using :reset to clear styles
+    #   styled = Style.new(foreground: :red, bold: true)
+    #   reset = Style.new(foreground: :reset, bold: :reset)
+    #   result = styled >> reset  # => foreground: nil, bold: nil
+    #
+    # @example Bold/faint mutual exclusion
     #   bold_style = Style.new(bold: true)
     #   faint_style = Style.new(faint: true)
-    #   result = bold_style >> faint_style  # => faint overrides bold
+    #   result1 = bold_style >> faint_style  # => faint wins (right-hand takes precedence)
+    #   result2 = faint_style >> bold_style  # => bold wins (right-hand takes precedence)
     def >>(other)
       # Handle bold/faint mutual exclusion in composition
-      composed_bold = other.bold.nil? ? bold : other.bold
-      composed_faint = other.faint.nil? ? faint : other.faint
+      composed_bold = compose_attribute(bold, other.bold)
+      composed_faint = compose_attribute(faint, other.faint)
 
       # If other explicitly sets bold, clear faint; if other explicitly sets faint, clear bold
       if other.bold == true
         composed_faint = false
       elsif other.faint == true
         composed_bold = false
+      elsif other.bold == :reset
+        composed_bold = nil
+      elsif other.faint == :reset
+        composed_faint = nil
       end
 
       Style.new(
-        foreground: other.foreground == :default ? foreground : other.foreground,
-        background: other.background == :default ? background : other.background,
-        inverse: other.inverse.nil? ? inverse : other.inverse,
+        foreground: compose_attribute(foreground, other.foreground),
+        background: compose_attribute(background, other.background),
+        inverse: compose_attribute(inverse, other.inverse),
         bold: composed_bold,
         faint: composed_faint,
-        underline: other.underline.nil? ? underline : other.underline,
-        overline: other.overline.nil? ? overline : other.overline,
-        blink: other.blink.nil? ? blink : other.blink,
-        italic: other.italic.nil? ? italic : other.italic,
-        hide: other.hide.nil? ? hide : other.hide
+        underline: compose_attribute(underline, other.underline),
+        overline: compose_attribute(overline, other.overline),
+        blink: compose_attribute(blink, other.blink),
+        italic: compose_attribute(italic, other.italic),
+        hide: compose_attribute(hide, other.hide)
       )
+    end
+
+    private def compose_attribute(current, other)
+      if other.nil?
+        current
+      elsif other == :reset
+        nil
+      else
+        other
+      end
     end
 
     private def build_styles
       styles = []
 
       # Add colors individually
-      if foreground != :default && background != :default
+      if foreground && foreground != :default && background && background != :default
         styles << foreground
         styles << background
-      elsif foreground != :default
+      elsif foreground && foreground != :default
         styles << foreground
-      elsif background != :default
+      elsif background && background != :default
         styles << nil
         styles << background
       end

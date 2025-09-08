@@ -10,7 +10,7 @@ module TIntMe
 
       # Standard ANSI color names
       ColorSymbol = Symbol.enum(
-        :default, :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :gray
+        :default, :reset, :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :gray
       )
       public_constant :ColorSymbol
 
@@ -21,10 +21,10 @@ module TIntMe
       Color = ColorSymbol | ColorString
       public_constant :Color
 
-      BooleanOption = Bool.optional
+      BooleanOption = (Bool | Symbol.enum(:reset)).optional
       public_constant :BooleanOption
 
-      UnderlineOption = (Bool | Symbol.enum(:double)).optional
+      UnderlineOption = (Bool | Symbol.enum(:double, :reset)).optional
       public_constant :UnderlineOption
     end
   end

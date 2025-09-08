@@ -45,6 +45,10 @@ Metrics/AbcSize:
   Exclude:
     - 'lib/tint_me/style.rb'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/tint_me/style.rb'
+
 Metrics/CyclomaticComplexity:
   Exclude:
     - 'lib/tint_me/style.rb'

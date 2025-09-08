@@ -24,7 +24,7 @@ RSpec.describe TIntMe do
     it "works with no arguments" do
       style = TIntMe[]
       expect(style).to be_a(TIntMe::Style)
-      expect(style.foreground).to eq(:default)
+      expect(style.foreground).to be_nil
     end
 
     it "applies styling to text" do
