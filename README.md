@@ -16,8 +16,14 @@ A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! p
 
 Add this line to your application's Gemfile:
 
+```ruby
+gem "tint_me"
+```
+
+And then execute:
+
 ```bash
-bundle add tint_me
+bundle install
 ```
 
 Or install it yourself as:
