@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [1.0.0] - 2025-09-09
+
 ### Added
 - Core Style class with immutable data structure using Data.define (extracted from Fasti gem)
 - Support for foreground/background colors (named colors, hex values)

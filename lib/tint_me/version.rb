@@ -3,6 +3,6 @@
 module TIntMe
   # Current version of the TIntMe gem
   # @return [String] The semantic version string
-  VERSION = "0.1.0"
+  VERSION = "1.0.0"
   public_constant :VERSION
 end
