@@ -17,6 +17,9 @@ env:
 jobs:
   create-release-branch:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write       # Required for git push (branch and tag creation)
+      pull-requests: write  # Required for PR creation
 
     steps:
     - name: Checkout code
