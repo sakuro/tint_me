@@ -1,5 +1,11 @@
 # Repository Guidelines
 
+> **Note**: This file is also accessible via the `CLAUDE.md` symlink for AI agent compatibility.
+
+> **Important**: This document references other documentation files. Please also read:
+> - `docs/agents/rubocop.md` - RuboCop fix guidelines for AI agents
+> - Any other documents referenced inline below
+
 ## Project Structure & Module Organization
 - `lib/tint_me`: Core library. Entry point is `lib/tint_me.rb`; code is namespaced under `TIntMe` (autoloaded via Zeitwerk).
 - `spec`: RSpec tests. Mirror library paths (e.g., `spec/tint_me/style_spec.rb`).
