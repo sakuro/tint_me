@@ -5,6 +5,7 @@ AllCops:
   Exclude:
     - bin/**/*
     - vendor/**/*
+    - benchmark/**/*
   ExtraDetails: true
   NewCops: enable
   TargetRubyVersion: 3.2
