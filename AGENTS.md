@@ -4,6 +4,8 @@
 
 > **Important**: This document references other documentation files. Please also read:
 > - `docs/agents/rubocop.md` - RuboCop fix guidelines for AI agents
+> - `docs/agents/git-pr.md` - Git commit and pull request guidelines
+> - `docs/agents/languages.md` - Language usage guidelines for communication and code
 > - Any other documents referenced inline below
 
 ## Project Structure & Module Organization
@@ -23,10 +25,11 @@
 - `docquet regenerate-todo`: Regenerate `.rubocop_todo.yml` after lint updates; include with related code fixes.
 
 ## Communication & Languages
-- Chat: Use the user's language for AI/maintainer communication.
-- Code & docs: Use English for source, inline comments, README, and YARD docs.
-- Pseudocode in chat: Comments within pseudocode blocks may be in the user's language.
-- Issues/PRs: Prefer English titles and descriptions for broader visibility.
+See `docs/agents/languages.md` for detailed language usage guidelines covering:
+- AI/user chat communication languages
+- Source code and documentation language requirements  
+- Issues/PRs language preferences
+- Context-appropriate language switching
 
 ## Coding Style & Naming Conventions
 - Ruby 3.x compatible; 2-space indent, `# frozen_string_literal: true` headers.
