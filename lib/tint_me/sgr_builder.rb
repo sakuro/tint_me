@@ -97,7 +97,7 @@ module TIntMe
     #   prefix_codes(foreground: :red, bold: true)
     #   # => "\e[31;1m"
     #
-    # @example 256-color RGB (true color)
+    # @example RGB true color (24-bit)
     #   prefix_codes(foreground: "#FF6B35", background: "#F7931E")
     #   # => "\e[38;2;255;107;53;48;2;247;147;30m"
     #
