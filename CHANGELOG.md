@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+### Development
+- Improved release workflow branch cleanup with existence check
+
 ## [1.0.0] - 2025-09-09
 
 ### Added
