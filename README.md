@@ -1,5 +1,11 @@
 # :lipstick: TIntMe! :nail_care:
 
+[![Gem Version](https://badge.fury.io/rb/tint_me.svg)](https://badge.fury.io/rb/tint_me)
+[![CI](https://github.com/sakuro/tint_me/workflows/CI/badge.svg)](https://github.com/sakuro/tint_me/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Gem Downloads](https://img.shields.io/gem/dt/tint_me.svg)](https://rubygems.org/gems/tint_me)
+[![Depfu](https://badges.depfu.com/badges/aec4d0a2094c04935f1db813351e5f56/overview.svg)](https://depfu.com/github/sakuro/tint_me)
+
 A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! provides an elegant and composable API for applying colors, text decorations, and formatting to terminal output.
 
 ## Features
