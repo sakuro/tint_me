@@ -23,3 +23,5 @@
 - RSpec test framework with progress format output
 - Development dependencies: RuboCop, YARD, SimpleCov
 - Continuous integration ready configuration
+- Comprehensive AI agent guidelines for Git/PR operations and language usage
+- Performance guidelines for style composition optimization
