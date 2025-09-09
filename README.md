@@ -96,7 +96,7 @@ final = base >> emphasis >> TIntMe[background: :white]
 
 #### ⚡ Performance Considerations
 
-**TIntMe is optimized for reusable styles** through SGR sequence caching. The composition operator (`>>`) should be used thoughtfully:
+**TIntMe is optimized for reusable styles** through SGR sequence pre-computation. The composition operator (`>>`) should be used thoughtfully:
 
 ```ruby
 # ✅ RECOMMENDED: Pre-compose and reuse
@@ -114,9 +114,40 @@ ERROR_STYLE.call("Error message")  # Fast: ~4.8M operations/sec
 - **Each `>>` operation**: Creates new Style instances and recalculates SGR sequences
 
 **Performance Comparison:**
-- Cached styles: **~4.8M operations/sec** (fastest)
+- Pre-computed styles: **~4.8M operations/sec** (fastest)
 - Runtime composition: **~0.01M operations/sec** (246x slower)
 - Direct Style.new: **~0.03M operations/sec** (71x slower)
+
+#### 🎯 When to Use TIntMe vs Alternatives
+
+**TIntMe excels at:**
+```ruby
+# Terminal UI frameworks with predefined styles
+UI_STYLES = {
+  error:   TIntMe[foreground: :red] >> TIntMe[bold: true],
+  success: TIntMe[foreground: :green] >> TIntMe[bold: true],
+  info:    TIntMe[foreground: :blue] >> TIntMe[italic: true]
+}
+
+def show_error(msg)
+  puts UI_STYLES[:error].call(msg)  # Extremely fast: ~4.8M ops/sec
+end
+```
+
+**Consider alternatives for:**
+```ruby
+# Dynamic styling (use Paint gem instead)
+texts.each { |text| Paint[text, :red, :bold] }  # ~2M ops/sec
+
+# One-time styling with readable syntax (use Rainbow gem)
+puts Rainbow("Success").green.bold  # ~0.5M ops/sec
+
+# Avoid with TIntMe - creates unnecessary overhead
+texts.each { |text| (red >> bold).call(text) }  # Only ~0.01M ops/sec
+```
+
+**Design Philosophy:**
+TIntMe is intentionally optimized for the **"define once, use many"** pattern through SGR sequence pre-computation at initialization time. The performance characteristics guide you toward the most efficient usage patterns, where a small set of predefined styles serves many styling operations.
 
 ### Method Aliases
 

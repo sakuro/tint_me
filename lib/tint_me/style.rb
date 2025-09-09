@@ -134,7 +134,7 @@ module TIntMe
         raise ArgumentError, "Cannot specify both bold and faint simultaneously"
       end
 
-      # Pre-calculate and cache SGR sequences before freezing
+      # Pre-compute SGR sequences before freezing
       # (Data.define freezes the instance after super)
       sgr_builder = self.class.sgr_builder
 
@@ -164,7 +164,7 @@ module TIntMe
         overline: overline == true ? true : nil
       )
 
-      # Cache reset code
+      # Pre-compute reset code
       @reset_code = sgr_builder.reset_code
 
       super
