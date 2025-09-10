@@ -24,6 +24,7 @@ group :development do
   gem "rubocop-rspec"
 
   # YARD
+  gem "gemoji" # For emoji support in documentation
   gem "redcarpet"
   gem "yard", github: "lsegal/yard" # Version with Data.define support
 end
