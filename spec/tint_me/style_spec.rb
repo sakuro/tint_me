@@ -256,4 +256,150 @@ RSpec.describe TIntMe::Style do
       expect(style_true.call("TEST")).to eq("#{esc}[1mTEST#{esc}[0m")
     end
   end
+
+  describe "positional arguments" do
+    describe ".new" do
+      context "with boolean flags as positional arguments" do
+        it "accepts single boolean flag" do
+          style = TIntMe::Style.new(:bold)
+          expect(style.bold).to be true
+          expect(style.italic).to be_nil
+        end
+
+        it "accepts multiple boolean flags" do
+          style = TIntMe::Style.new(:bold, :italic, :underline)
+          expect(style.bold).to be true
+          expect(style.italic).to be true
+          expect(style.underline).to be true
+        end
+
+        it "handles duplicate boolean flags idempotently" do
+          style = TIntMe::Style.new(:bold, :italic, :bold)
+          expect(style.bold).to be true
+          expect(style.italic).to be true
+        end
+      end
+
+      context "with color names as positional arguments" do
+        it "accepts color symbol as foreground" do
+          style = TIntMe::Style.new(:red)
+          expect(style.foreground).to eq :red
+        end
+
+        it "accepts bright color symbol" do
+          style = TIntMe::Style.new(:bright_blue)
+          expect(style.foreground).to eq :bright_blue
+        end
+
+        it "last color wins when multiple colors specified" do
+          style = TIntMe::Style.new(:red, :blue, :green)
+          expect(style.foreground).to eq :green
+        end
+      end
+
+      context "with hex colors as positional arguments" do
+        it "accepts 6-digit hex color with hash" do
+          style = TIntMe::Style.new("#FF0000", :bold)
+          expect(style.foreground).to eq "#FF0000"
+          expect(style.bold).to be true
+        end
+
+        it "accepts 6-digit hex color without hash" do
+          style = TIntMe::Style.new("FF0000", :italic)
+          expect(style.foreground).to eq "FF0000"
+          expect(style.italic).to be true
+        end
+
+        it "accepts 3-digit hex color" do
+          style = TIntMe::Style.new("#F00", :underline)
+          expect(style.foreground).to eq "#F00"
+          expect(style.underline).to be true
+        end
+
+        it "last hex color wins when multiple specified" do
+          style = TIntMe::Style.new("#FF0000", "#00FF00", "#0000FF")
+          expect(style.foreground).to eq "#0000FF"
+        end
+      end
+
+      context "with mixed positional and keyword arguments" do
+        it "accepts color and flags as positional with background as keyword" do
+          style = TIntMe::Style.new(:red, :bold, background: :yellow)
+          expect(style.foreground).to eq :red
+          expect(style.bold).to be true
+          expect(style.background).to eq :yellow
+        end
+
+        it "keyword arguments override positional colors" do
+          style = TIntMe::Style.new(:red, :blue, foreground: :green)
+          expect(style.foreground).to eq :green
+        end
+
+        it "keyword arguments override positional boolean flags" do
+          style = TIntMe::Style.new(:bold, :italic, bold: false)
+          expect(style.bold).to be false
+          expect(style.italic).to be true
+        end
+
+        it "accepts hex color with boolean flags and keyword arguments" do
+          style = TIntMe::Style.new("#FF0000", :bold, :italic, background: "#0000FF")
+          expect(style.foreground).to eq "#FF0000"
+          expect(style.background).to eq "#0000FF"
+          expect(style.bold).to be true
+          expect(style.italic).to be true
+        end
+      end
+
+      context "with invalid positional arguments" do
+        it "raises ArgumentError for unknown symbol" do
+          expect { TIntMe::Style.new(:invalid_flag) }.to raise_error(ArgumentError, /Invalid positional argument/)
+        end
+
+        it "raises ArgumentError for non-symbol/non-string argument" do
+          expect { TIntMe::Style.new(123) }.to raise_error(ArgumentError, /Invalid positional argument/)
+        end
+
+        it "raises ArgumentError for invalid hex string" do
+          expect { TIntMe::Style.new("#GGGGGG") }.to raise_error(ArgumentError, /Invalid positional argument/)
+        end
+      end
+
+      context "with backward compatibility" do
+        it "works with only keyword arguments" do
+          style = TIntMe::Style.new(foreground: :red, bold: true, italic: false)
+          expect(style.foreground).to eq :red
+          expect(style.bold).to be true
+          expect(style.italic).to be false
+        end
+
+        it "works with no arguments" do
+          style = TIntMe::Style.new
+          expect(style.foreground).to be_nil
+          expect(style.bold).to be_nil
+        end
+      end
+    end
+
+    describe ".[]" do
+      it "supports positional arguments like .new" do
+        style = TIntMe::Style[:red, :bold, :italic]
+        expect(style.foreground).to eq :red
+        expect(style.bold).to be true
+        expect(style.italic).to be true
+      end
+
+      it "supports mixed positional and keyword arguments" do
+        style = TIntMe::Style[:red, :bold, background: :blue]
+        expect(style.foreground).to eq :red
+        expect(style.bold).to be true
+        expect(style.background).to eq :blue
+      end
+
+      it "keyword arguments override positional arguments" do
+        style = TIntMe::Style[:red, foreground: :blue, bold: false]
+        expect(style.foreground).to eq :blue
+        expect(style.bold).to be false
+      end
+    end
+  end
 end

@@ -42,6 +42,60 @@ module TIntMe
   #     # ... other boolean effects: overline, blink, conceal
   #   )
   class Style
+    # Module to extend constructor with positional argument support
+    # @api private
+    module ConstructorExtensions
+      # Normalize positional and keyword arguments for Style construction
+      # @param args [Array] Positional arguments (colors and boolean flags)
+      # @param kwargs [Hash] Keyword arguments
+      # @return [Hash] Normalized keyword arguments
+      # @api private
+      def normalize_constructor_args(*args, **kwargs)
+        # Validate all positional arguments at once using array validation
+        Types::PositionalArgumentsArray[args] unless args.empty?
+
+        # Now normalize the positional arguments
+        normalized = kwargs.dup
+        foreground_color = nil
+
+        args.each do |arg|
+          # Determine if it's a color or a boolean flag
+          if Types::ColorSymbol.valid?(arg) || Types::ColorString.valid?(arg)
+            # Color argument - last one wins
+            foreground_color = arg
+          elsif Types::BooleanFlagSymbol.valid?(arg)
+            # Boolean flag - set to true (idempotent)
+            normalized[arg] = true unless normalized.key?(arg)
+          end
+        end
+
+        # Apply foreground color if specified (keyword argument takes precedence)
+        normalized[:foreground] = foreground_color if foreground_color && !normalized.key?(:foreground)
+
+        normalized
+      rescue Dry::Types::CoercionError => e
+        # Extract the invalid argument from the error for a cleaner message
+        raise ArgumentError, "Invalid positional argument(s): #{e.message}"
+      end
+
+      # Override new to support positional arguments
+      def new(*args, **)
+        return super(**) if args.empty?
+
+        super(**normalize_constructor_args(*args, **))
+      end
+
+      # Override [] to support positional arguments
+      def [](*args, **)
+        return super(**) if args.empty?
+
+        super(**normalize_constructor_args(*args, **))
+      end
+    end
+
+    # Apply the constructor extensions to the singleton class
+    singleton_class.prepend ConstructorExtensions
+
     # Returns the singleton instance of SGRBuilder
     # @return [SGRBuilder] The SGR builder instance
     # @api private
@@ -96,6 +150,10 @@ module TIntMe
     # @example Valid usage
     #   Style.new(foreground: :red, bold: true)
     #   Style.new(underline: :double, background: "#FF0000")
+    # @example Positional arguments
+    #   Style.new(:red, :bold, :italic)  # foreground: :red, bold: true, italic: true
+    #   Style.new("#FF0000", :underline) # foreground: "#FF0000", underline: true
+    #   Style[:blue, :bold]               # foreground: :blue, bold: true
     # @example Invalid usage (raises ArgumentError)
     #   Style.new(foreground: 123)        # Invalid color type
     #   Style.new(bold: "true")           # Invalid boolean type
