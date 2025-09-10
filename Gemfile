@@ -31,5 +31,5 @@ end
 group :test do
   # RSpec & SimpleCov
   gem "rspec"
-  gem "simplecov"
+  gem "simplecov", require: false
 end
