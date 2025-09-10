@@ -56,21 +56,31 @@ module TIntMe
 
         # Now normalize the positional arguments
         normalized = kwargs.dup
-        foreground_color = nil
+        colors = []
 
         args.each do |arg|
           # Determine if it's a color or a boolean flag
           if Types::ColorSymbol.valid?(arg) || Types::ColorString.valid?(arg)
-            # Color argument - last one wins
-            foreground_color = arg
+            # Color argument - collect up to 2 colors
+            colors << arg
           elsif Types::BooleanFlagSymbol.valid?(arg)
             # Boolean flag - set to true (idempotent)
             normalized[arg] = true unless normalized.key?(arg)
           end
         end
 
-        # Apply foreground color if specified (keyword argument takes precedence)
-        normalized[:foreground] = foreground_color if foreground_color && !normalized.key?(:foreground)
+        # Validate maximum 2 colors
+        if colors.length > 2
+          raise ArgumentError, "Too many color arguments (maximum 2 allowed, got #{colors.length})"
+        end
+
+        # Apply colors if specified (keyword arguments take precedence)
+        if colors.length >= 1 && !normalized.key?(:foreground)
+          normalized[:foreground] = colors[0]
+        end
+        if colors.length == 2 && !normalized.key?(:background)
+          normalized[:background] = colors[1]
+        end
 
         normalized
       rescue Dry::Types::CoercionError => e
@@ -151,9 +161,10 @@ module TIntMe
     #   Style.new(foreground: :red, bold: true)
     #   Style.new(underline: :double, background: "#FF0000")
     # @example Positional arguments
-    #   Style.new(:red, :bold, :italic)  # foreground: :red, bold: true, italic: true
-    #   Style.new("#FF0000", :underline) # foreground: "#FF0000", underline: true
-    #   Style[:blue, :bold]               # foreground: :blue, bold: true
+    #   Style.new(:red, :bold, :italic)          # foreground: :red, bold: true, italic: true
+    #   Style.new(:red, :yellow, :bold)          # foreground: :red, background: :yellow, bold: true
+    #   Style.new("#FF0000", "#00FF00")          # foreground: "#FF0000", background: "#00FF00"
+    #   Style[:blue, :bold]                      # foreground: :blue, bold: true
     # @example Invalid usage (raises ArgumentError)
     #   Style.new(foreground: 123)        # Invalid color type
     #   Style.new(bold: "true")           # Invalid boolean type
