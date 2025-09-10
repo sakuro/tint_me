@@ -3,6 +3,9 @@ name: Release Preparation
 # This workflow only handles file updates for release preparation.
 # All validations are performed by the Release Validation workflow on PR creation.
 
+env:
+  GEM_NAME: ${{ github.event.repository.name }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,9 +13,6 @@ on:
         description: 'Release version (e.g., 1.0.0)'
         required: true
         type: string
-
-env:
-  GEM_NAME: ${{ github.event.repository.name }}
 
 jobs:
   create-release-branch:
@@ -26,12 +26,6 @@ jobs:
       uses: actions/checkout@v5
       with:
         fetch-depth: 0
-
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.4'
-        bundler-cache: true
 
     - name: Set git user
       uses: git-actions/set-user@v1
