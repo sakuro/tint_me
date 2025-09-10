@@ -45,6 +45,27 @@ module TIntMe
 
       UnderlineOption = (Bool | Symbol.enum(:double, :reset)).optional
       public_constant :UnderlineOption
+
+      # Boolean flags that can be used as positional arguments
+      BooleanFlagSymbol = Symbol.enum(
+        :bold,
+        :faint,
+        :italic,
+        :underline,
+        :overline,
+        :blink,
+        :inverse,
+        :conceal
+      )
+      public_constant :BooleanFlagSymbol
+
+      # Valid positional arguments (color symbols + hex strings + boolean flags)
+      PositionalArgument = ColorSymbol | ColorString | BooleanFlagSymbol
+      public_constant :PositionalArgument
+
+      # Array of positional arguments for validation
+      PositionalArgumentsArray = Array.of(PositionalArgument)
+      public_constant :PositionalArgumentsArray
     end
   end
 end

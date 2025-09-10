@@ -16,7 +16,7 @@ A Ruby library for terminal text styling with ANSI colors and effects. TIntMe! p
 - **Type Safety**: Comprehensive argument validation using dry-schema and dry-types
 - **Immutable Design**: All style operations return new instances, making them safe for concurrent use
 - **Zeitwerk Integration**: Automatic loading with proper module organization
-- **Comprehensive API**: Both explicit `Style.new` and convenient `TIntMe[]` shortcut syntax
+- **Positional Arguments**: Concise syntax with `TIntMe[:red, :bold]` for streamlined styling
 
 ## Installation
 
@@ -42,11 +42,13 @@ gem install tint_me
 
 ### Basic Styling
 
+TIntMe supports both keyword arguments and positional arguments for creating styles. Here are examples using keyword arguments:
+
 ```ruby
 require 'tint_me'
 
-# Create a style
-red_style = TIntMe::Style.new(foreground: :red)
+# Create a style with keyword arguments
+red_style = TIntMe[foreground: :red]
 puts red_style.call("Hello World")
 
 # Using the shortcut syntax
@@ -54,36 +56,97 @@ blue_style = TIntMe[foreground: :blue, bold: true]
 puts blue_style["Hello World"]
 ```
 
+### Positional Arguments
+
+TIntMe supports a concise positional argument syntax for common styling scenarios:
+
+#### Supported Positional Arguments
+
+**Colors** (applied as foreground):
+- Color symbols: `:red`, `:green`, `:blue`, `:yellow`, `:magenta`, `:cyan`, `:white`, `:black`, `:gray`  
+- Bright colors: `:bright_red`, `:bright_green`, `:bright_blue`, etc.
+- Special values: `:default`, `:reset`
+- Hex strings: `"#FF0000"`, `"FF0000"`, `"#F00"`, `"F00"`
+
+**Boolean flags** (set to `true`):
+- `:bold`, `:faint`, `:italic`, `:underline`, `:overline`, `:blink`, `:inverse`, `:conceal`
+
+#### Behavior Rules
+
+```ruby
+# Multiple colors: last one wins
+TIntMe[:red, :blue, :green]                  # => foreground: :green
+
+# Duplicate flags: idempotent (no error)  
+TIntMe[:bold, :italic, :bold]                # => bold: true, italic: true
+
+# Keyword arguments override positional
+TIntMe[:red, foreground: :blue]              # => foreground: :blue
+TIntMe[:bold, bold: false]                   # => bold: false
+
+# Mix freely for complex styling
+TIntMe[:red, :bold, background: :yellow, underline: :double]
+```
+
 ### Color Options
 
 ```ruby
-# Standard colors
+# Standard colors (keyword arguments)
 TIntMe[foreground: :red]
 TIntMe[background: :yellow]
 
-# Hex colors (with or without #)
+# Standard colors (positional arguments)
+TIntMe[:red]                          # Foreground color
+TIntMe[:bright_blue]                  # Bright colors supported
+
+# Hex colors (keyword arguments)
 TIntMe[foreground: "#FF0000"]
 TIntMe[background: "#00FF00"]
 TIntMe[foreground: "FF0000"]
+
+# Hex colors (positional arguments)
+TIntMe["#FF0000"]                                    # 6-digit with hash
+TIntMe["FF0000"]                                     # 6-digit without hash
+TIntMe["#F00"]                                       # 3-digit with hash
+TIntMe["F00"]                                        # 3-digit without hash
+
+# Mix positional and keyword arguments
+TIntMe[:red, background: :yellow]                    # Red foreground, yellow background
+TIntMe["#00FF00", :bold, background: :black]         # Green foreground, bold, black background
 ```
 
 ### Text Effects
 
 ```ruby
-# Individual effects
+# Individual effects (keyword arguments)
 TIntMe[bold: true]
-TIntMe[faint: true]          # Faint/dim text
+TIntMe[faint: true]                   # Faint/dim text
 TIntMe[italic: true]
 TIntMe[underline: true]
-TIntMe[underline: :double]   # Double underline
-TIntMe[overline: true]       # Overline decoration
-TIntMe[blink: true]          # Blinking text
-TIntMe[inverse: true]        # Reverse colors
-TIntMe[conceal: true]        # Hidden/concealed text
+TIntMe[underline: :double]            # Double underline
+TIntMe[overline: true]                # Overline decoration
+TIntMe[blink: true]                   # Blinking text
+TIntMe[inverse: true]                 # Reverse colors
+TIntMe[conceal: true]                 # Hidden/concealed text
 
-# Multiple effects
+# Individual effects (positional arguments)
+TIntMe[:bold]                         # Bold text
+TIntMe[:italic]                       # Italic text
+TIntMe[:underline]                    # Underlined text
+
+# Multiple effects (keyword arguments)
 TIntMe[foreground: :green, bold: true, underline: true]
+
+# Multiple effects (positional arguments)
+TIntMe[:bold, :italic, :underline]                   # Multiple boolean flags
+TIntMe[:red, :bold, :italic]                         # Color + effects
+TIntMe["#FF5733", :bold, :underline, :blink]         # Hex color + effects
+
+# Mixed approaches
+TIntMe[:bold, :italic, background: :yellow]          # Positional flags + keyword background
+TIntMe[:red, :bold, underline: :double]              # Positional color/flag + special underline
 ```
+
 
 ### Style Composition
 
@@ -107,10 +170,13 @@ final = base >> emphasis >> TIntMe[background: :white]
 ```ruby
 # ✅ RECOMMENDED: Pre-compose and reuse
 ERROR_STYLE = TIntMe[foreground: :red] >> TIntMe[bold: true]
-ERROR_STYLE.call("Error message")  # Fast: ~4.8M operations/sec
+# OR using positional arguments (equivalent)
+ERROR_STYLE = TIntMe[:red] >> TIntMe[:bold]
+ERROR_STYLE.call("Error message")            # Fast: ~4.8M operations/sec
 
-# ❌ AVOID: Runtime composition  
+# ❌ AVOID: Runtime composition
 (TIntMe[foreground: :red] >> TIntMe[bold: true]).call("Error")  # Slow: ~0.01M ops/sec
+(TIntMe[:red] >> TIntMe[:bold]).call("Error")                   # Also slow: ~0.01M ops/sec
 ```
 
 **Key Guidelines:**
@@ -130,26 +196,27 @@ ERROR_STYLE.call("Error message")  # Fast: ~4.8M operations/sec
 ```ruby
 # Terminal UI frameworks with predefined styles
 UI_STYLES = {
-  error:   TIntMe[foreground: :red] >> TIntMe[bold: true],
-  success: TIntMe[foreground: :green] >> TIntMe[bold: true],
-  info:    TIntMe[foreground: :blue] >> TIntMe[italic: true]
+  error:   TIntMe[:red, :bold],                      # Concise positional syntax
+  success: TIntMe[foreground: :green, bold: true],   # Or keyword arguments
+  warning: TIntMe[:yellow] >> TIntMe[:bold],         # Or use composition (combining styles)
+  info:    TIntMe[:blue, :italic]
 }
 
 def show_error(msg)
-  puts UI_STYLES[:error].call(msg)  # Extremely fast: ~4.8M ops/sec
+  puts UI_STYLES[:error].call(msg)          # Extremely fast: ~4.8M ops/sec
 end
 ```
 
 **Consider alternatives for:**
 ```ruby
 # Dynamic styling (use Paint gem instead)
-texts.each { |text| Paint[text, :red, :bold] }  # ~2M ops/sec
+texts.each { |text| Paint[text, :red, :bold] }          # ~2M ops/sec
 
 # One-time styling with readable syntax (use Rainbow gem)
-puts Rainbow("Success").green.bold  # ~0.5M ops/sec
+puts Rainbow("Success").green.bold                      # ~0.5M ops/sec
 
 # Avoid with TIntMe - creates unnecessary overhead
-texts.each { |text| (red >> bold).call(text) }  # Only ~0.01M ops/sec
+texts.each { |text| (red >> bold).call(text) }          # Only ~0.01M ops/sec
 ```
 
 **Design Philosophy:**
@@ -163,7 +230,7 @@ style = TIntMe[foreground: :red, bold: true]
 # All of these are equivalent
 puts style.call("Hello")
 puts style["Hello"]
-puts style.("Hello")  # Callable syntax
+puts style.("Hello")                  # Callable syntax
 ```
 
 ## Development

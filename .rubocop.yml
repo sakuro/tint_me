@@ -47,6 +47,9 @@ RSpec/ExampleLength:
 RSpec/MultipleExpectations:
   Enabled: false
 
+RSpec/NestedGroups:
+  Enabled: false
+
 # Project-specific RSpec settings
 RSpec/SpecFilePathFormat:
   CustomTransform:
