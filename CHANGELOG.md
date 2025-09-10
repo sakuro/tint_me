@@ -2,11 +2,12 @@
 
 ### Added
 - **Positional Arguments Support**: New concise syntax for style creation
-  - Colors as positional arguments: `TIntMe[:red]`, `TIntMe["#FF0000"]`
+  - Single color as positional argument: `TIntMe[:red]` sets foreground
+  - Two colors as positional arguments: `TIntMe[:red, :yellow]` sets foreground and background
   - Boolean flags as positional arguments: `TIntMe[:bold, :italic]`
-  - Mixed usage: `TIntMe[:red, :bold, background: :yellow]`
+  - Mixed usage: `TIntMe[:red, :yellow, :bold, background: :blue]`
   - Support for all color formats: symbols, hex strings (with/without #, 3/6 digits)
-  - Last-wins semantics for multiple colors, idempotent handling for duplicate flags
+  - Maximum 2 color arguments allowed (3+ raises ArgumentError)
   - Keyword arguments take precedence over positional arguments
 - Type safety with dry-types `PositionalArgumentsArray` validation
 - Comprehensive test coverage for all positional argument scenarios

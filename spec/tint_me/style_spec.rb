@@ -291,9 +291,10 @@ RSpec.describe TIntMe::Style do
           expect(style.foreground).to eq :bright_blue
         end
 
-        it "last color wins when multiple colors specified" do
-          style = TIntMe::Style.new(:red, :blue, :green)
-          expect(style.foreground).to eq :green
+        it "accepts two colors as foreground and background" do
+          style = TIntMe::Style.new(:red, :blue)
+          expect(style.foreground).to eq :red
+          expect(style.background).to eq :blue
         end
       end
 
@@ -316,9 +317,10 @@ RSpec.describe TIntMe::Style do
           expect(style.underline).to be true
         end
 
-        it "last hex color wins when multiple specified" do
-          style = TIntMe::Style.new("#FF0000", "#00FF00", "#0000FF")
-          expect(style.foreground).to eq "#0000FF"
+        it "accepts two hex colors as foreground and background" do
+          style = TIntMe::Style.new("#FF0000", "#00FF00")
+          expect(style.foreground).to eq "#FF0000"
+          expect(style.background).to eq "#00FF00"
         end
       end
 
@@ -333,6 +335,21 @@ RSpec.describe TIntMe::Style do
         it "keyword arguments override positional colors" do
           style = TIntMe::Style.new(:red, :blue, foreground: :green)
           expect(style.foreground).to eq :green
+          expect(style.background).to eq :blue
+        end
+
+        it "keyword background overrides positional background" do
+          style = TIntMe::Style.new(:red, :yellow, background: :blue)
+          expect(style.foreground).to eq :red
+          expect(style.background).to eq :blue
+        end
+
+        it "accepts two colors with boolean flags" do
+          style = TIntMe::Style.new(:red, :yellow, :bold, :italic)
+          expect(style.foreground).to eq :red
+          expect(style.background).to eq :yellow
+          expect(style.bold).to be true
+          expect(style.italic).to be true
         end
 
         it "keyword arguments override positional boolean flags" do
@@ -361,6 +378,18 @@ RSpec.describe TIntMe::Style do
 
         it "raises ArgumentError for invalid hex string" do
           expect { TIntMe::Style.new("#GGGGGG") }.to raise_error(ArgumentError, /Invalid positional argument/)
+        end
+
+        it "raises ArgumentError for too many color arguments" do
+          expect { TIntMe::Style.new(:red, :blue, :green) }.to raise_error(ArgumentError, /Too many color arguments/)
+        end
+
+        it "raises ArgumentError for too many hex color arguments" do
+          expect { TIntMe::Style.new("#FF0000", "#00FF00", "#0000FF") }.to raise_error(ArgumentError, /Too many color arguments/)
+        end
+
+        it "raises ArgumentError for mixed colors beyond 2" do
+          expect { TIntMe::Style.new(:red, "#00FF00", :blue) }.to raise_error(ArgumentError, /Too many color arguments/)
         end
       end
 

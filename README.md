@@ -74,18 +74,22 @@ TIntMe supports a concise positional argument syntax for common styling scenario
 #### Behavior Rules
 
 ```ruby
-# Multiple colors: last one wins
-TIntMe[:red, :blue, :green]                  # => foreground: :green
+# Two colors: first is foreground, second is background
+TIntMe[:red, :yellow]                        # => foreground: :red, background: :yellow
+
+# Too many colors: error
+TIntMe[:red, :blue, :green]                  # => ArgumentError: Too many color arguments
 
 # Duplicate flags: idempotent (no error)  
 TIntMe[:bold, :italic, :bold]                # => bold: true, italic: true
 
 # Keyword arguments override positional
 TIntMe[:red, foreground: :blue]              # => foreground: :blue
+TIntMe[:red, :yellow, background: :green]    # => foreground: :red, background: :green
 TIntMe[:bold, bold: false]                   # => bold: false
 
 # Mix freely for complex styling
-TIntMe[:red, :bold, background: :yellow, underline: :double]
+TIntMe[:red, :yellow, :bold, underline: :double]  # => foreground: :red, background: :yellow, bold: true, underline: :double
 ```
 
 ### Color Options
@@ -140,11 +144,13 @@ TIntMe[foreground: :green, bold: true, underline: true]
 # Multiple effects (positional arguments)
 TIntMe[:bold, :italic, :underline]                   # Multiple boolean flags
 TIntMe[:red, :bold, :italic]                         # Color + effects
+TIntMe[:red, :yellow, :bold, :italic]                # Foreground + background + effects
 TIntMe["#FF5733", :bold, :underline, :blink]         # Hex color + effects
 
 # Mixed approaches
 TIntMe[:bold, :italic, background: :yellow]          # Positional flags + keyword background
-TIntMe[:red, :bold, underline: :double]              # Positional color/flag + special underline
+TIntMe[:red, :yellow, underline: :double]            # Positional colors + keyword underline
+TIntMe[:red, :bold, background: :blue]               # Positional color/flag + keyword background
 ```
 
 
