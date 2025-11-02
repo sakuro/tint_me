@@ -1,0 +1,8 @@
+module Dry
+  module Schema
+    class Processor
+    end
+
+    def self.define: () { () -> void } -> Processor
+  end
+end

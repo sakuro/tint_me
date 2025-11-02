@@ -1,0 +1,11 @@
+module Dry
+  module Types
+    class Type
+    end
+
+    class Constructor < Type
+    end
+  end
+
+  def self.Types: () -> Module
+end

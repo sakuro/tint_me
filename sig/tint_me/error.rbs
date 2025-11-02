@@ -1,0 +1,4 @@
+module TIntMe
+  class Error < StandardError
+  end
+end
