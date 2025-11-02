@@ -2,6 +2,10 @@
 
 ## [1.1.0] - 2025-11-02
 
+## [Unreleased]
+
+## [1.1.0] - 2025-11-02
+
 ### Added
 - **Positional Arguments Support**: New concise syntax for style creation
   - Single color as positional argument: `TIntMe[:red]` sets foreground
