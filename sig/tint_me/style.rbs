@@ -1,0 +1,73 @@
+module TIntMe
+  class Style
+    type color_value = :default | :reset | :black | :red | :green | :yellow | :blue | :magenta | :cyan | :white | :gray | :bright_black | :bright_red | :bright_green | :bright_yellow | :bright_blue | :bright_magenta | :bright_cyan | :bright_white | String
+    type boolean_value = bool | :reset
+    type underline_value = bool | :double | :reset
+    type positional_arg = color_value | :bold | :faint | :italic | :underline | :overline | :blink | :inverse | :conceal
+    type attribute_value = color_value? | boolean_value? | underline_value?
+
+    attr_reader foreground: color_value?
+    attr_reader background: color_value?
+    attr_reader inverse: boolean_value?
+    attr_reader bold: boolean_value?
+    attr_reader faint: boolean_value?
+    attr_reader underline: underline_value?
+    attr_reader overline: boolean_value?
+    attr_reader blink: boolean_value?
+    attr_reader italic: boolean_value?
+    attr_reader conceal: boolean_value?
+
+    def self.sgr_builder: () -> SGRBuilder
+
+    def self.new: (
+      *positional_arg args,
+      ?foreground: color_value?,
+      ?background: color_value?,
+      ?inverse: boolean_value?,
+      ?bold: boolean_value?,
+      ?faint: boolean_value?,
+      ?underline: underline_value?,
+      ?overline: boolean_value?,
+      ?blink: boolean_value?,
+      ?italic: boolean_value?,
+      ?conceal: boolean_value?
+    ) -> Style
+
+    def self.[]: (
+      *positional_arg args,
+      ?foreground: color_value?,
+      ?background: color_value?,
+      ?inverse: boolean_value?,
+      ?bold: boolean_value?,
+      ?faint: boolean_value?,
+      ?underline: underline_value?,
+      ?overline: boolean_value?,
+      ?blink: boolean_value?,
+      ?italic: boolean_value?,
+      ?conceal: boolean_value?
+    ) -> Style
+
+    def initialize: (
+      ?foreground: color_value?,
+      ?background: color_value?,
+      ?inverse: boolean_value?,
+      ?bold: boolean_value?,
+      ?faint: boolean_value?,
+      ?underline: underline_value?,
+      ?overline: boolean_value?,
+      ?blink: boolean_value?,
+      ?italic: boolean_value?,
+      ?conceal: boolean_value?
+    ) -> void
+
+    def call: (String text) -> String
+
+    alias [] call
+
+    def >>: (Style other) -> Style
+
+    private
+
+    def compose_attribute: (attribute_value current, attribute_value other) -> attribute_value
+  end
+end

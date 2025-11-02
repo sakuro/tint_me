@@ -1,0 +1,5 @@
+module TIntMe
+  class Style
+    Schema: Dry::Schema::Processor
+  end
+end

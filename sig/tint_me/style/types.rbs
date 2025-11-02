@@ -1,0 +1,14 @@
+module TIntMe
+  class Style
+    module Types
+      ColorSymbol: Dry::Types::Type
+      ColorString: Dry::Types::Type
+      Color: Dry::Types::Type
+      BooleanOption: Dry::Types::Type
+      UnderlineOption: Dry::Types::Type
+      BooleanFlagSymbol: Dry::Types::Type
+      PositionalArgument: Dry::Types::Type
+      PositionalArgumentsArray: Dry::Types::Type
+    end
+  end
+end

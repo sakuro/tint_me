@@ -1,0 +1,60 @@
+module TIntMe
+  class SGRBuilder
+    ESC: String
+    CSI: String
+    SGR_END: String
+    RESET_CODE: String
+    COLORS: Hash[Symbol, Integer]
+    EFFECTS: Hash[Symbol, Integer]
+
+    def self.instance: () -> SGRBuilder
+
+    private
+
+    def self.new: () -> void
+
+    public
+
+    def prefix_codes: (
+      ?foreground: (Symbol | String)?,
+      ?background: (Symbol | String)?,
+      ?bold: bool?,
+      ?faint: bool?,
+      ?italic: bool?,
+      ?underline: (bool | :double)?,
+      ?blink: bool?,
+      ?inverse: bool?,
+      ?conceal: bool?,
+      ?overline: bool?
+    ) -> String
+
+    def reset_code: () -> String
+
+    private
+
+    def rgb_to_sgr: (Integer red, Integer green, Integer blue, ?background: bool) -> String
+
+    def build_parameters: (
+      foreground: (Symbol | String)?,
+      background: (Symbol | String)?,
+      bold: bool?,
+      faint: bool?,
+      italic: bool?,
+      underline: (bool | :double)?,
+      blink: bool?,
+      inverse: bool?,
+      conceal: bool?,
+      overline: bool?
+    ) -> Array[Integer | String]
+
+    def process_foreground_color: (Symbol | String foreground) -> (Integer | String)
+
+    def process_background_color: (Symbol | String background) -> (Integer | String)
+
+    def build_sgr_sequence: (Array[Integer | String] parameters) -> String
+
+    def hex_color?: (String value) -> bool
+
+    def hex_to_rgb: (String hex) -> [Integer, Integer, Integer]
+  end
+end
